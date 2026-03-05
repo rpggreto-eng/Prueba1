@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Panel · Controleventify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080a;--s1:#0e1014;--s2:#161a20;--s3:#1e222a;--bd:#272c36;
+  --a1:#c8ff57;--a2:#57c8ff;--a3:#ff6b57;--a4:#b557ff;
+  --tx:#e8ecf2;--mu:#5a6275;
+  --fn:'Bricolage Grotesque',sans-serif;--mo:'JetBrains Mono',monospace;--r:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--tx);font-family:var(--fn);min-height:100vh;overflow-x:hidden}
+
+/* LIVE INDICATOR */
+.live-dot{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mo);color:var(--a1);background:rgba(200,255,87,.08);border:1px solid rgba(200,255,87,.2);border-radius:20px;padding:4px 10px}
+.live-dot::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--a1);box-shadow:0 0 8px var(--a1);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+
+#login{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .35s,transform .35s}
+#login.out{opacity:0;transform:scale(.96);pointer-events:none}
+.lbox{width:390px;background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:48px 38px 38px;position:relative;overflow:hidden}
+.lbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a4))}
+.lglow{position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:340px;height:240px;pointer-events:none;background:radial-gradient(ellipse,rgba(200,255,87,.07) 0%,transparent 68%)}
+.lbox h1{font-size:28px;font-weight:800;letter-spacing:-.8px;margin-bottom:5px}
+.lbox h1 em{font-style:normal;color:var(--a1)}
+.lbox p{font-size:12px;color:var(--mu);font-family:var(--mo);margin-bottom:34px}
+.lf{margin-bottom:14px}
+.lf label{display:block;font-size:10px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:var(--mu);font-family:var(--mo);margin-bottom:7px}
+.lf input{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 15px;color:var(--tx);font-family:var(--mo);font-size:13px;outline:none;transition:border-color .2s,box-shadow .2s}
+.lf input:focus{border-color:var(--a1);box-shadow:0 0 0 3px rgba(200,255,87,.07)}
+.lerr{background:rgba(255,107,87,.1);border:1px solid rgba(255,107,87,.25);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--a3);font-family:var(--mo);margin-bottom:14px;display:none}
+.lerr.on{display:block}
+.lbtn{width:100%;background:var(--a1);color:#07080a;border:none;border-radius:var(--r);padding:13px;font-family:var(--fn);font-size:14px;font-weight:800;cursor:pointer;transition:background .2s,transform .1s}
+.lbtn:hover{background:#b5eb3f;transform:translateY(-1px)}
+
+#app{display:none;flex-direction:column;min-height:100vh}
+#app.on{display:flex}
+
+.tb{height:58px;background:var(--s1);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 26px;position:sticky;top:0;z-index:100;gap:14px}
+.tb-logo{font-size:16px;font-weight:800;letter-spacing:-.5px;white-space:nowrap}
+.tb-logo em{font-style:normal;color:var(--a1)}
+.tabs{display:flex;gap:2px;flex:1;overflow-x:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:transparent;border:none;border-radius:8px;padding:8px 15px;color:var(--mu);font-family:var(--fn);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:7px}
+.tab:hover{color:var(--tx);background:var(--s2)}
+.tab.on{color:var(--a1);background:rgba(200,255,87,.07)}
+.tab .dot{width:7px;height:7px;border-radius:50%;background:var(--mu);transition:background .2s;flex-shrink:0}
+.tab.on .dot{background:var(--a1);box-shadow:0 0 6px var(--a1)}
+.tb-r{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.av{width:30px;height:30px;border-radius:50%;background:var(--a1);color:#07080a;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.uname{font-size:13px;font-weight:600}
+.obtn{background:transparent;border:1px solid var(--bd);border-radius:8px;padding:6px 12px;color:var(--mu);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.obtn:hover{color:var(--a3);border-color:var(--a3)}
+
+.main{padding:26px 30px;max-width:1300px;width:100%;margin:0 auto}
+.panel{display:none;animation:fu .25s ease}
+.panel.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:14px;flex-wrap:wrap}
+.ph h2{font-size:23px;font-weight:800;letter-spacing:-.5px}
+.ph h2 b{color:var(--a1);font-weight:800}
+.ph p{font-size:12px;color:var(--mu);font-family:var(--mo);margin-top:3px}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:11px;margin-bottom:22px}
+.sc{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:17px 18px}
+.sc-l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--mu);font-family:var(--mo);margin-bottom:7px}
+.sc-v{font-size:28px;font-weight:800;letter-spacing:-1px}
+.c1{color:var(--a1)}.c2{color:var(--a2)}.c3{color:var(--a3)}.c4{color:var(--a4)}
+
+.tw{background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.tt{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--bd);gap:10px;flex-wrap:wrap}
+.sb{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 13px;color:var(--tx);font-family:var(--mo);font-size:12px;outline:none;width:200px;transition:border-color .2s}
+.sb:focus{border-color:var(--a2)}
+.sb::placeholder{color:var(--mu)}
+.ta-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--s2);padding:10px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--mu);border-bottom:1px solid var(--bd);white-space:nowrap;font-family:var(--mo)}
+tbody tr{border-bottom:1px solid var(--bd);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--s2)}
+td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ci{color:var(--a2);font-family:var(--mo);font-size:11px}
+.cd{color:var(--mu);font-family:var(--mo);font-size:11px}
+
+.bg{display:inline-block;padding:3px 9px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-family:var(--mo)}
+.bg1{background:rgba(200,255,87,.12);color:var(--a1)}
+.bg2{background:rgba(87,200,255,.12);color:var(--a2)}
+.bg3{background:rgba(255,107,87,.12);color:var(--a3)}
+.bg4{background:rgba(181,87,255,.12);color:var(--a4)}
+.bg0{background:rgba(90,98,117,.15);color:var(--mu)}
+
+.ra{display:flex;gap:5px}
+.ia{background:transparent;border:1px solid var(--bd);border-radius:6px;padding:4px 9px;font-size:11px;color:var(--mu);cursor:pointer;transition:all .15s;font-family:var(--mo)}
+.ia:hover{color:var(--tx);border-color:var(--mu)}
+.ia.del:hover{color:var(--a3);border-color:var(--a3)}
+.ia.img-btn{color:var(--a2);border-color:rgba(87,200,255,.3)}
+.ia.img-btn:hover{color:var(--tx);border-color:var(--a2);background:rgba(87,200,255,.08)}
+
+.empty{padding:50px;text-align:center;color:var(--mu)}
+.empty-i{font-size:38px;opacity:.3;margin-bottom:10px}
+.empty p{font-size:12px;font-family:var(--mo)}
+
+.btn{background:var(--a1);color:#07080a;border:none;border-radius:8px;padding:9px 18px;font-family:var(--fn);font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,transform .1s;white-space:nowrap}
+.btn:hover{background:#b5eb3f;transform:translateY(-1px)}
+.btn.sky{background:var(--a2)}.btn.sky:hover{background:#42b3e8}
+.btn.coral{background:var(--a3)}.btn.coral:hover{background:#e85c45}
+.btn.sm{padding:7px 14px;font-size:12px}
+.btn-g{background:transparent;border:1px solid var(--bd);border-radius:8px;padding:9px 16px;color:var(--mu);font-family:var(--fn);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-g:hover{color:var(--tx);border-color:var(--mu)}
+.btn-g.sm{padding:7px 14px;font-size:12px}
+
+.tf{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.flt{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:7px 14px;color:var(--mu);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.flt:hover{color:var(--tx)}
+.flt.on{color:var(--a1);border-color:rgba(200,255,87,.3);background:rgba(200,255,87,.05)}
+.tc{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px 20px;display:flex;align-items:flex-start;gap:14px;margin-bottom:8px;transition:border-color .2s,transform .15s}
+.tc:hover{border-color:var(--s3);transform:translateX(3px)}
+.tc.done{opacity:.45}
+.chk{width:22px;height:22px;border-radius:6px;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;transition:all .2s;font-size:13px}
+.chk:hover{border-color:var(--a1)}
+.chk.on{background:var(--a1);border-color:var(--a1);color:#07080a;font-weight:700}
+.tb2{flex:1;min-width:0}
+.tt2{font-size:14px;font-weight:600;margin-bottom:5px}
+.tc.done .tt2{text-decoration:line-through;color:var(--mu)}
+.tm{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tnote{font-size:11px;color:var(--mu);font-family:var(--mo)}
+.twho{font-size:11px;color:var(--mu);font-family:var(--mo);margin-left:auto}
+.tdel{background:transparent;border:none;color:var(--mu);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:5px;transition:color .2s;line-height:1}
+.tdel:hover{color:var(--a3)}
+
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:800;opacity:0;pointer-events:none;transition:opacity .2s}
+.ov.on{opacity:1;pointer-events:all}
+.modal{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:30px 26px;width:500px;max-width:94vw;max-height:88vh;overflow-y:auto;transform:translateY(18px);transition:transform .2s;position:relative}
+.ov.on .modal{transform:translateY(0)}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--a2),var(--a1));border-radius:16px 16px 0 0}
+.modal h3{font-size:17px;font-weight:800;margin-bottom:20px}
+.mc{position:absolute;top:14px;right:16px;background:transparent;border:none;color:var(--mu);font-size:20px;cursor:pointer;padding:2px 8px}
+.mc:hover{color:var(--tx)}
+.mf{margin-bottom:13px}
+.mf label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--mu);font-family:var(--mo);margin-bottom:7px}
+.mf input,.mf textarea,.mf select{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 13px;color:var(--tx);font-family:var(--mo);font-size:13px;outline:none;transition:border-color .2s}
+.mf select option{background:var(--s2)}
+.mf textarea{resize:vertical;min-height:76px}
+.mf input:focus,.mf textarea:focus,.mf select:focus{border-color:var(--a2)}
+.mr{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.mbtns{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+
+/* IMAGE UPLOAD AREA */
+.img-upload-area{border:2px dashed var(--bd);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;background:var(--s2)}
+.img-upload-area:hover,.img-upload-area.drag{border-color:var(--a2);background:rgba(87,200,255,.04)}
+.img-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-upload-area .up-icon{font-size:28px;margin-bottom:8px;opacity:.5}
+.img-upload-area p{font-size:12px;color:var(--mu);font-family:var(--mo)}
+.img-upload-area .up-hint{font-size:10px;color:var(--mu);opacity:.6;margin-top:4px}
+.img-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:10px}
+.img-thumb{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;border:1px solid var(--bd);background:var(--s3)}
+.img-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.img-thumb .rm{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.7);border:none;border-radius:4px;color:var(--a3);cursor:pointer;font-size:12px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;line-height:1;transition:background .15s}
+.img-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+.img-thumb:hover img{transform:scale(1.05)}
+.img-thumb .rm:hover{background:var(--a3);color:#fff}
+.img-badge{position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,.65);border-radius:4px;font-size:9px;font-family:var(--mo);color:rgba(255,255,255,.75);padding:2px 5px;pointer-events:none}
+.img-uploading{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--a2);font-family:var(--mo);margin-top:8px;padding:8px 12px;background:rgba(87,200,255,.06);border-radius:8px;border:1px solid rgba(87,200,255,.15)}
+.spinner{width:14px;height:14px;border:2px solid rgba(87,200,255,.2);border-top-color:var(--a2);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* IMAGE VIEWER MODAL */
+.img-viewer{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.img-viewer.on{opacity:1;pointer-events:all}
+.img-viewer img{max-width:90vw;max-height:85vh;border-radius:10px;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.img-viewer-close{position:fixed;top:18px;right:22px;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px 12px;border-radius:8px;transition:background .2s}
+.img-viewer-close:hover{background:rgba(255,255,255,.2)}
+.img-viewer-nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center}
+.img-viewer-nav span{font-size:12px;font-family:var(--mo);color:rgba(255,255,255,.5)}
+.img-viewer-nav button{background:rgba(255,255,255,.1);border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:var(--mo);font-size:12px;transition:background .2s}
+.img-viewer-nav button:hover{background:rgba(255,255,255,.2)}
+
+/* IMAGES IN TABLE */
+.img-stack{display:flex;align-items:center;gap:-4px}
+.img-stack-th{width:26px;height:26px;border-radius:5px;border:2px solid var(--s1);object-fit:cover;margin-left:-6px;cursor:pointer;transition:transform .15s}
+.img-stack-th:first-child{margin-left:0}
+.img-stack-th:hover{transform:scale(1.15);z-index:10;position:relative}
+.img-count{font-size:10px;font-family:var(--mo);color:var(--a2);margin-left:4px;cursor:pointer}
+.img-count:hover{text-decoration:underline}
+
+/* INLINE IMAGES IN TASK CARDS */
+.tc-imgs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tc-imgs img{width:50px;height:50px;border-radius:6px;object-fit:cover;border:1px solid var(--bd);cursor:pointer;transition:transform .15s,border-color .15s}
+.tc-imgs img:hover{transform:scale(1.08);border-color:var(--a2)}
+
+/* REAL-TIME FLASH */
+@keyframes rowFlash{0%{background:rgba(200,255,87,.08)}100%{background:transparent}}
+.rt-new{animation:rowFlash 1.5s ease-out}
+
+.toast{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--bd);border-left:3px solid var(--a1);border-radius:10px;padding:12px 18px;font-size:13px;font-family:var(--mo);z-index:9999;transform:translateY(16px);opacity:0;transition:all .3s;pointer-events:none;max-width:320px}
+.toast.on{transform:translateY(0);opacity:1}
+.toast.err{border-left-color:var(--a3)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="lbox">
+    <div class="lglow"></div>
+    <h1>Panel<em>.</em></h1>
+    <p>controleventify · acceso interno</p>
+    <div class="lerr" id="lerr">Usuario o contraseña incorrectos</div>
+    <div class="lf"><label>Usuario</label><input id="lu" type="text" placeholder="gian / greto" autocomplete="username"/></div>
+    <div class="lf"><label>Contraseña</label><input id="lp" type="password" placeholder="••••••" autocomplete="current-password"/></div>
+    <button class="lbtn" onclick="doLogin()">Entrar →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="tb">
+    <div class="tb-logo">Panel<em>.</em></div>
+    <div class="tabs">
+      <button class="tab on" onclick="go('users',this)"><span class="dot"></span>Jugadores</button>
+      <button class="tab"    onclick="go('warns',this)"><span class="dot"></span>Warns</button>
+      <button class="tab"    onclick="go('tickets',this)"><span class="dot"></span>Tickets</button>
+      <button class="tab"    onclick="go('tasks',this)"><span class="dot"></span>Tareas</button>
+    </div>
+    <div class="tb-r">
+      <span class="live-dot">EN VIVO</span>
+      <div class="av" id="uav">G</div>
+      <span class="uname" id="unm">Usuario</span>
+      <button class="obtn" onclick="doLogout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- JUGADORES -->
+    <div class="panel on" id="panel-users">
+      <div class="ph">
+        <div><h2>Jugadores <b>/ Usuarios</b></h2><p>Gestiona los miembros registrados · tiempo real</p></div>
+        <button class="btn" onclick="openModal('users')">+ Agregar jugador</button>
+      </div>
+      <div class="stats">
+        <div class="sc"><div class="sc-l">Total</div><div class="sc-v c1" id="u-t">—</div></div>
+        <div class="sc"><div class="sc-l">Activos</div><div class="sc-v c2" id="u-a">—</div></div>
+        <div class="sc"><div class="sc-l">Baneados</div><div class="sc-v c3" id="u-b">—</div></div>
+        <div class="sc"><div class="sc-l">Staff</div><div class="sc-v c4" id="u-s">—</div></div>
+      </div>
+      <div class="tw">
+        <div class="tt">
+          <input class="sb" id="us" placeholder="🔍 Buscar jugador…" oninput="renderUsers()"/>
+        </div>
+        <div style="overflow-x:auto">
+          <table><thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th><th>Discord</th><th>Notas</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <tbody id="u-tb"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- WARNS -->
+    <div class="panel" id="panel-warns">
+      <div class="ph">
+        <div><h2>Warns <b>/ Sanciones</b></h2><p>Registro de advertencias y sanciones · tiempo real</p></div>
+        <button class="btn coral" onclick="openModal('warns')">+ Nueva sanción</button>
+      </div>
+      <div class="stats">
+        <div class="sc"><div class="sc-l">Total</div><div class="sc-v c3" id="w-t">—</div></div>
+        <div class="sc"><div class="sc-l">Warns</div><div class="sc-v c2" id="w-w">—</div></div>
+        <div class="sc"><div class="sc-l">Bans</div><div class="sc-v c3" id="w-b">—</div></div>
+        <div class="sc"><div class="sc-l">Este mes</div><div class="sc-v c1" id="w-m">—</div></div>
+      </div>
+      <div class="tw">
+        <div class="tt"><input class="sb" id="ws" placeholder="🔍 Buscar…" oninput="renderWarns()"/></div>
+        <div style="overflow-x:auto">
+          <table><thead><tr><th>Jugador</th><th>Tipo</th><th>Motivo</th><th>Por</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <tbody id="w-tb"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TICKETS -->
+    <div class="panel" id="panel-tickets">
+      <div class="ph">
+        <div><h2>Tickets <b>/ Soporte</b></h2><p>Gestión de solicitudes y reportes · tiempo real</p></div>
+        <button class="btn sky" onclick="openModal('tickets')">+ Nuevo ticket</button>
+      </div>
+      <div class="stats">
+        <div class="sc"><div class="sc-l">Total</div><div class="sc-v c2" id="t-t">—</div></div>
+        <div class="sc"><div class="sc-l">Abiertos</div><div class="sc-v c1" id="t-o">—</div></div>
+        <div class="sc"><div class="sc-l">En proceso</div><div class="sc-v c4" id="t-p">—</div></div>
+        <div class="sc"><div class="sc-l">Cerrados</div><div class="sc-v c3" id="t-c">—</div></div>
+      </div>
+      <div class="tw">
+        <div class="tt">
+          <input class="sb" id="ts" placeholder="🔍 Buscar ticket…" oninput="renderTickets()"/>
+          <div class="ta-row">
+            <select id="tfl" onchange="renderTickets()" style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;color:var(--tx);font-family:var(--mo);font-size:12px;outline:none">
+              <option value="">Todos</option><option value="abierto">Abiertos</option>
+              <option value="en proceso">En proceso</option><option value="cerrado">Cerrados</option>
+            </select>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table><thead><tr><th>Asunto</th><th>Jugador</th><th>Categoría</th><th>Estado</th><th>Asignado</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <tbody id="t-tb"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAREAS -->
+    <div class="panel" id="panel-tasks">
+      <div class="ph">
+        <div><h2>Tareas <b>internas</b></h2><p>Solo para el equipo · gian & greto · tiempo real</p></div>
+        <button class="btn" onclick="openModal('tasks')">+ Nueva tarea</button>
+      </div>
+      <div class="stats">
+        <div class="sc"><div class="sc-l">Total</div><div class="sc-v c1" id="ta-t">—</div></div>
+        <div class="sc"><div class="sc-l">Pendientes</div><div class="sc-v c2" id="ta-p">—</div></div>
+        <div class="sc"><div class="sc-l">Completadas</div><div class="sc-v c1" id="ta-d">—</div></div>
+        <div class="sc"><div class="sc-l">Alta prioridad</div><div class="sc-v c3" id="ta-h">—</div></div>
+      </div>
+      <div class="tf">
+        <button class="flt on" onclick="setTF('all',this)">Todas</button>
+        <button class="flt"    onclick="setTF('pending',this)">Pendientes</button>
+        <button class="flt"    onclick="setTF('done',this)">Completadas</button>
+        <button class="flt"    onclick="setTF('alta',this)">Alta prioridad</button>
+      </div>
+      <div id="task-cards"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="ov" id="ov" onclick="bgClose(event)">
+  <div class="modal">
+    <button class="mc" onclick="closeModal()">×</button>
+    <h3 id="m-ttl">Nuevo registro</h3>
+    <div id="m-body"></div>
+    <!-- Image upload section (shown for all except users optionally) -->
+    <div id="m-img-section" style="margin-top:4px">
+      <div class="mf">
+        <label>🖼 Imágenes adjuntas <span style="font-size:9px;opacity:.6">(todos pueden verlas)</span></label>
+        <div class="img-upload-area" id="drop-zone">
+          <input type="file" id="img-input" accept="image/*" multiple onchange="handleImgSelect(event)"/>
+          <div class="up-icon">📎</div>
+          <p>Haz clic o arrastra imágenes aquí</p>
+          <div class="up-hint">PNG, JPG, GIF, WEBP · máx 5 MB por imagen</div>
+        </div>
+        <div id="img-uploading" class="img-uploading" style="display:none">
+          <div class="spinner"></div><span>Subiendo imágenes…</span>
+        </div>
+        <div class="img-preview-grid" id="img-preview"></div>
+      </div>
+    </div>
+    <div class="mbtns">
+      <button class="btn-g" onclick="closeModal()">Cancelar</button>
+      <button class="btn sky" onclick="saveRec()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE VIEWER -->
+<div class="img-viewer" id="img-viewer" onclick="closeViewer(event)">
+  <button class="img-viewer-close" onclick="closeViewer()">×</button>
+  <img id="viewer-img" src="" alt=""/>
+  <div class="img-viewer-nav">
+    <button onclick="viewerNav(-1)">← Ant</button>
+    <span id="viewer-counter">1 / 1</span>
+    <button onclick="viewerNav(1)">Sig →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp }   from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc,
+         updateDoc, deleteDoc, doc, serverTimestamp,
+         query, orderBy, onSnapshot, arrayUnion, arrayRemove
+       } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyC4FVfOGBqoPy54CiloGHjL0ZoEN29_3Mo",
+  authDomain:        "controleventify.firebaseapp.com",
+  projectId:         "controleventify",
+  storageBucket:     "controleventify.firebasestorage.app",
+  messagingSenderId: "675120152011",
+  appId:             "1:675120152011:web:432f26240d88702e2a8a4e"
+};
+
+const fbApp  = initializeApp(firebaseConfig);
+const db     = getFirestore(fbApp);
+
+
+/* ── AUTH ── */
+const CREDS = { gian:'123', greto:'123' };
+let CU = sessionStorage.getItem('cu');
+if (CU && CREDS[CU]) initApp();
+
+window.doLogin = () => {
+  const u = document.getElementById('lu').value.trim().toLowerCase();
+  const p = document.getElementById('lp').value;
+  document.getElementById('lerr').classList.remove('on');
+  if (CREDS[u] && CREDS[u] === p) {
+    CU = u; sessionStorage.setItem('cu', u);
+    document.getElementById('login').classList.add('out');
+    setTimeout(initApp, 380);
+  } else {
+    document.getElementById('lerr').classList.add('on');
+  }
+};
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.getElementById('login').classList.contains('out')) window.doLogin();
+});
+window.doLogout = () => { sessionStorage.removeItem('cu'); location.reload(); };
+
+/* ── DB & REAL-TIME LISTENERS ── */
+const DB = { users:[], warns:[], tickets:[], tasks:[] };
+let TF = 'all';
+const unsubs = [];
+
+function initApp() {
+  document.getElementById('app').classList.add('on');
+  document.getElementById('unm').textContent = CU.charAt(0).toUpperCase() + CU.slice(1);
+  document.getElementById('uav').textContent = CU.charAt(0).toUpperCase();
+  startListeners();
+}
+
+function startListeners() {
+  // Unsubscribe old if any
+  unsubs.forEach(u => u());
+  unsubs.length = 0;
+
+  const cols = ['users','warns','tickets','tasks'];
+  cols.forEach(col => {
+    const q = query(collection(db, col), orderBy('createdAt','desc'));
+    const unsub = onSnapshot(q, snap => {
+      const prev = DB[col].map(x=>x.id);
+      DB[col] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      // Detect new docs to flash
+      const newIds = DB[col].map(x=>x.id).filter(id => !prev.includes(id));
+      renderAll(newIds, col);
+    }, err => {
+      showToast('Error tiempo real: ' + err.message, true);
+    });
+    unsubs.push(unsub);
+  });
+}
+
+/* ── NAV ── */
+window.go = (tab, btn) => {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('panel-' + tab).classList.add('on');
+  btn.classList.add('on');
+};
+
+/* ── RENDER ── */
+function renderAll(newIds=[], col='') {
+  renderUsers(col==='users'?newIds:[]);
+  renderWarns(col==='warns'?newIds:[]);
+  renderTickets(col==='tickets'?newIds:[]);
+  renderTasks();
+}
+
+/* ── IMAGE STACK HELPER ── */
+function imgStack(imgs, res, id) {
+  if (!imgs || !imgs.length) return '<span style="color:var(--mu);font-size:11px">—</span>';
+  const shown = imgs.slice(0,3);
+  const extra = imgs.length - shown.length;
+  const thumbs = shown.map((url,i) =>
+    `<img class="img-stack-th" src="${url}" onclick="openViewer(${JSON.stringify(imgs)},${i})" title="Ver imagen"/>`
+  ).join('');
+  const more = extra > 0 ? `<span class="img-count" onclick="openViewer(${JSON.stringify(imgs)},0)">+${extra}</span>` : '';
+  return `<div class="img-stack">${thumbs}${more}</div>`;
+}
+
+/* ── RENDER USERS ── */
+window.renderUsers = (newIds=[]) => {
+  const q = document.getElementById('us').value.toLowerCase();
+  const rows = DB.users.filter(u => !q || u.nombre?.toLowerCase().includes(q) || u.discord?.toLowerCase().includes(q));
+  document.getElementById('u-t').textContent = DB.users.length;
+  document.getElementById('u-a').textContent = DB.users.filter(u=>u.estado==='activo').length;
+  document.getElementById('u-b').textContent = DB.users.filter(u=>u.estado==='baneado').length;
+  document.getElementById('u-s').textContent = DB.users.filter(u=>u.rol==='admin'||u.rol==='mod').length;
+  const tb = document.getElementById('u-tb');
+  if (!rows.length) { tb.innerHTML = eRow(8,'Sin jugadores registrados'); return; }
+  tb.innerHTML = rows.map(u=>`<tr class="${newIds.includes(u.id)?'rt-new':''}">
+    <td><b>${esc(u.nombre||'—')}</b></td>
+    <td>${rolB(u.rol)}</td><td>${estB(u.estado)}</td>
+    <td class="cd">${esc(u.discord||'—')}</td>
+    <td style="max-width:160px">${esc(u.notas||'—')}</td>
+    <td>${imgStack(u.imagenes,'users',u.id)}</td>
+    <td class="cd">${fd(u.createdAt)}</td>
+    <td><div class="ra">
+      <button class="ia" onclick="editRec('users','${u.id}')">✏</button>
+      <button class="ia img-btn" onclick="openImgUpload('users','${u.id}')">🖼</button>
+      <button class="ia del" onclick="delRec('users','${u.id}')">✕</button>
+    </div></td></tr>`).join('');
+};
+
+/* ── RENDER WARNS ── */
+window.renderWarns = (newIds=[]) => {
+  const q = document.getElementById('ws').value.toLowerCase();
+  const rows = DB.warns.filter(w=>!q||w.jugador?.toLowerCase().includes(q)||w.motivo?.toLowerCase().includes(q));
+  const now=new Date(),m=now.getMonth(),y=now.getFullYear();
+  document.getElementById('w-t').textContent = DB.warns.length;
+  document.getElementById('w-w').textContent = DB.warns.filter(w=>w.tipo!=='ban').length;
+  document.getElementById('w-b').textContent = DB.warns.filter(w=>w.tipo==='ban').length;
+  document.getElementById('w-m').textContent = DB.warns.filter(w=>{
+    const d=w.createdAt?.toDate?w.createdAt.toDate():new Date(w.createdAt||0);
+    return d.getMonth()===m&&d.getFullYear()===y;
+  }).length;
+  const tb = document.getElementById('w-tb');
+  if (!rows.length) { tb.innerHTML = eRow(7,'Sin sanciones registradas'); return; }
+  tb.innerHTML = rows.map(w=>`<tr class="${newIds.includes(w.id)?'rt-new':''}">
+    <td><b>${esc(w.jugador||'—')}</b></td>
+    <td>${tipoB(w.tipo)}</td>
+    <td style="max-width:200px">${esc(w.motivo||'—')}</td>
+    <td>${esc(w.por||'—')}</td>
+    <td>${imgStack(w.imagenes,'warns',w.id)}</td>
+    <td class="cd">${fd(w.createdAt)}</td>
+    <td><div class="ra">
+      <button class="ia img-btn" onclick="openImgUpload('warns','${w.id}')">🖼</button>
+      <button class="ia del" onclick="delRec('warns','${w.id}')">✕</button>
+    </div></td></tr>`).join('');
+};
+
+/* ── RENDER TICKETS ── */
+window.renderTickets = (newIds=[]) => {
+  const q = document.getElementById('ts').value.toLowerCase();
+  const f = document.getElementById('tfl').value;
+  const rows = DB.tickets.filter(t=>(!f||t.estado===f)&&(!q||t.asunto?.toLowerCase().includes(q)||t.jugador?.toLowerCase().includes(q)));
+  document.getElementById('t-t').textContent = DB.tickets.length;
+  document.getElementById('t-o').textContent = DB.tickets.filter(t=>t.estado==='abierto').length;
+  document.getElementById('t-p').textContent = DB.tickets.filter(t=>t.estado==='en proceso').length;
+  document.getElementById('t-c').textContent = DB.tickets.filter(t=>t.estado==='cerrado').length;
+  const tb = document.getElementById('t-tb');
+  if (!rows.length) { tb.innerHTML = eRow(8,'Sin tickets'); return; }
+  tb.innerHTML = rows.map(t=>`<tr class="${newIds.includes(t.id)?'rt-new':''}">
+    <td><b>${esc(t.asunto||'—')}</b></td>
+    <td>${esc(t.jugador||'—')}</td>
+    <td>${catB(t.categoria)}</td>
+    <td>${tkB(t.estado)}</td>
+    <td>${esc(t.asignado||'—')}</td>
+    <td>${imgStack(t.imagenes,'tickets',t.id)}</td>
+    <td class="cd">${fd(t.createdAt)}</td>
+    <td><div class="ra">
+      <button class="ia" onclick="editRec('tickets','${t.id}')">✏</button>
+      <button class="ia img-btn" onclick="openImgUpload('tickets','${t.id}')">🖼</button>
+      <button class="ia del" onclick="delRec('tickets','${t.id}')">✕</button>
+    </div></td></tr>`).join('');
+};
+
+/* ── RENDER TASKS ── */
+window.setTF = (f,btn) => {
+  TF=f;
+  document.querySelectorAll('.flt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderTasks();
+};
+window.renderTasks = () => {
+  let rows=[...DB.tasks];
+  if(TF==='pending') rows=rows.filter(t=>!t.done);
+  if(TF==='done')    rows=rows.filter(t=>t.done);
+  if(TF==='alta')    rows=rows.filter(t=>t.prioridad==='alta');
+  document.getElementById('ta-t').textContent=DB.tasks.length;
+  document.getElementById('ta-p').textContent=DB.tasks.filter(t=>!t.done).length;
+  document.getElementById('ta-d').textContent=DB.tasks.filter(t=>t.done).length;
+  document.getElementById('ta-h').textContent=DB.tasks.filter(t=>t.prioridad==='alta').length;
+  const c=document.getElementById('task-cards');
+  if(!rows.length){c.innerHTML=`<div class="empty"><div class="empty-i">📋</div><p>Sin tareas — crea una con el botón de arriba</p></div>`;return;}
+  c.innerHTML=rows.map(t=>`
+    <div class="tc ${t.done?'done':''}">
+      <div class="chk ${t.done?'on':''}" onclick="toggleTask('${t.id}',${!!t.done})">${t.done?'✓':''}</div>
+      <div class="tb2">
+        <div class="tt2">${esc(t.titulo||'Sin título')}</div>
+        <div class="tm">
+          ${t.nota?`<span class="tnote">${esc(t.nota)}</span>`:''}
+          ${prioB(t.prioridad)}
+          <span class="twho">→ ${esc(t.asignado||'—')}</span>
+          <button class="ia img-btn" style="padding:2px 8px;font-size:10px" onclick="openImgUpload('tasks','${t.id}')">🖼 Fotos</button>
+        </div>
+        ${t.imagenes && t.imagenes.length ? `<div class="tc-imgs">${t.imagenes.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(t.imagenes)},${i})" title="Ver imagen"/>`).join('')}</div>` : ''}
+      </div>
+      <button class="tdel" onclick="delRec('tasks','${t.id}')">✕</button>
+    </div>`).join('');
+};
+
+window.toggleTask = async (id, done) => {
+  try {
+    await updateDoc(doc(db,'tasks',id),{done:!done});
+  } catch(e){showToast(e.message,true);}
+};
+
+/* ── MODAL FORMS ── */
+let _res=null,_id=null;
+let _pendingImgs = []; // {dataUrl, file} — waiting to upload on save
+let _existingImgs = []; // already-uploaded URLs
+
+const FORMS={
+  users:`<div class="mr">
+    <div class="mf"><label>Nombre *</label><input id="f-nombre" placeholder="NombreJugador"/></div>
+    <div class="mf"><label>Discord</label><input id="f-discord" placeholder="user#0000"/></div>
+  </div>
+  <div class="mr">
+    <div class="mf"><label>Rol</label><select id="f-rol">
+      <option value="jugador">Jugador</option><option value="vip">VIP</option>
+      <option value="mod">Moderador</option><option value="admin">Admin</option>
+    </select></div>
+    <div class="mf"><label>Estado</label><select id="f-estado">
+      <option value="activo">Activo</option><option value="inactivo">Inactivo</option>
+      <option value="baneado">Baneado</option>
+    </select></div>
+  </div>
+  <div class="mf"><label>Notas</label><textarea id="f-notas"></textarea></div>`,
+
+  warns:`<div class="mr">
+    <div class="mf"><label>Jugador *</label><input id="f-jugador" placeholder="Nombre del jugador"/></div>
+    <div class="mf"><label>Tipo</label><select id="f-tipo">
+      <option value="warn">Warn</option><option value="mute">Mute</option>
+      <option value="kick">Kick</option><option value="ban">Ban</option>
+    </select></div>
+  </div>
+  <div class="mf"><label>Motivo *</label><textarea id="f-motivo" placeholder="Motivo de la sanción…"></textarea></div>
+  <div class="mf"><label>Sancionado por</label><input id="f-por"/></div>`,
+
+  tickets:`<div class="mf"><label>Asunto *</label><input id="f-asunto" placeholder="Título del ticket"/></div>
+  <div class="mr">
+    <div class="mf"><label>Jugador</label><input id="f-jugador"/></div>
+    <div class="mf"><label>Categoría</label><select id="f-categoria">
+      <option value="reporte">Reporte</option><option value="apelacion">Apelación</option>
+      <option value="soporte">Soporte técnico</option><option value="sugerencia">Sugerencia</option>
+      <option value="otro">Otro</option>
+    </select></div>
+  </div>
+  <div class="mr">
+    <div class="mf"><label>Estado</label><select id="f-estado">
+      <option value="abierto">Abierto</option><option value="en proceso">En proceso</option>
+      <option value="cerrado">Cerrado</option>
+    </select></div>
+    <div class="mf"><label>Asignado a</label><select id="f-asignado">
+      <option value="">Sin asignar</option><option value="Gian">Gian</option><option value="Greto">Greto</option>
+    </select></div>
+  </div>
+  <div class="mf"><label>Descripción</label><textarea id="f-descripcion"></textarea></div>`,
+
+  tasks:`<div class="mf"><label>Título *</label><input id="f-titulo" placeholder="Qué hay que hacer…"/></div>
+  <div class="mr">
+    <div class="mf"><label>Prioridad</label><select id="f-prioridad">
+      <option value="baja">Baja</option><option value="media" selected>Media</option><option value="alta">Alta</option>
+    </select></div>
+    <div class="mf"><label>Asignado a</label><select id="f-asignado">
+      <option value="Gian">Gian</option><option value="Greto">Greto</option><option value="Ambos">Ambos</option>
+    </select></div>
+  </div>
+  <div class="mf"><label>Nota</label><textarea id="f-nota"></textarea></div>`
+};
+const TITLES={users:'Jugador',warns:'Sanción',tickets:'Ticket',tasks:'Tarea'};
+const REQ={users:'nombre',warns:'jugador',tickets:'asunto',tasks:'titulo'};
+
+window.openModal = (res, id=null) => {
+  _res=res; _id=id;
+  _pendingImgs=[];
+  _existingImgs=[];
+  document.getElementById('m-ttl').textContent=(id?'Editar ':'Nuevo/a ')+TITLES[res];
+  document.getElementById('m-body').innerHTML=FORMS[res];
+  const por=document.getElementById('f-por');
+  if(por&&!id) por.value=CU?CU.charAt(0).toUpperCase()+CU.slice(1):'';
+  if(id){
+    const item=DB[res].find(x=>x.id===id);
+    if(item){
+      Object.keys(item).forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=item[k]??'';});
+      _existingImgs = item.imagenes ? [...item.imagenes] : [];
+    }
+  }
+  // Show static image section and build inside it
+  const sec = document.getElementById('m-img-section');
+  if(sec){ sec.style.display='block'; sec.innerHTML=''; buildImgSection(sec); }
+  document.getElementById('ov').classList.add('on');
+  setTimeout(()=>document.querySelector('#m-body input,#m-body textarea')?.focus(),100);
+};
+
+window.editRec = (res,id) => openModal(res,id);
+window.closeModal = () => {
+  document.getElementById('ov').classList.remove('on');
+  _res=_id=null; _pendingImgs=[]; _existingImgs=[];
+  // Reset image section
+  const sec = document.getElementById('m-img-section');
+  if(sec){ sec.style.display=''; sec.innerHTML=''; }
+};
+window.bgClose = (e) => { if(e.target===document.getElementById('ov')) closeModal(); };
+
+/* ── IMAGE HANDLING IN MODAL ── */
+
+// Build the full upload zone + preview into a given container element
+function buildImgSection(container) {
+  container.insertAdjacentHTML('beforeend', `
+    <div class="mf" style="margin-bottom:0">
+      <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--mu);font-family:var(--mo)">🖼 Imágenes adjuntas</span>
+        <span style="font-size:9px;font-family:var(--mo);color:var(--a2);background:rgba(87,200,255,.1);border:1px solid rgba(87,200,255,.2);border-radius:4px;padding:2px 7px">todos pueden verlas</span>
+      </label>
+      <div class="img-upload-area" id="drop-zone">
+        <input type="file" id="img-input" accept="image/*" multiple/>
+        <div class="up-icon">📎</div>
+        <p>Haz clic o arrastra imágenes aquí</p>
+        <div class="up-hint">PNG, JPG, GIF, WEBP · máx 5 MB por imagen</div>
+      </div>
+      <div id="img-uploading" class="img-uploading" style="display:none">
+        <div class="spinner"></div>
+        <span id="img-upload-txt">Subiendo imágenes…</span>
+      </div>
+      <div class="img-preview-grid" id="img-preview"></div>
+    </div>`);
+
+  document.getElementById('img-input').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+    for(const f of files){
+      if(f.size > 5*1024*1024){ showToast('Imagen demasiado grande (máx 5 MB)',true); continue; }
+      const dataUrl = await fileToDataUrl(f);
+      _pendingImgs.push({ dataUrl, file: f });
+    }
+    refreshImgPreview();
+    e.target.value = '';
+  });
+
+  refreshImgPreview();
+}
+
+function refreshImgPreview() {
+  const grid = document.getElementById('img-preview');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  if (_existingImgs.length === 0 && _pendingImgs.length === 0) {
+    grid.innerHTML = '<p style="font-size:11px;color:var(--mu);font-family:var(--mo);padding:6px 2px;opacity:.55">Sin imágenes adjuntas aún</p>';
+    return;
+  }
+
+  const allExisting = [..._existingImgs];
+
+  _existingImgs.forEach((url, i) => {
+    const div = document.createElement('div');
+    div.className = 'img-thumb';
+    div.innerHTML = `
+      <img src="${url}" onclick="openViewer(${JSON.stringify(allExisting)},${i})" title="Ver imagen"/>
+      <div class="img-badge">subida</div>
+      <button class="rm" title="Eliminar" onclick="removeExistingImg(${i})">✕</button>`;
+    grid.appendChild(div);
+  });
+
+  _pendingImgs.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'img-thumb';
+    div.style.outline = '2px dashed var(--a2)';
+    div.style.outlineOffset = '-2px';
+    div.innerHTML = `
+      <img src="${item.dataUrl}" title="Vista previa — se sube al guardar"/>
+      <div class="img-badge" style="background:rgba(200,255,87,.85);color:#07080a">nueva</div>
+      <button class="rm" title="Quitar" onclick="removePendingImg(${i})">✕</button>`;
+    grid.appendChild(div);
+  });
+}
+
+window.removeExistingImg = (i) => { _existingImgs.splice(i,1); refreshImgPreview(); };
+window.removePendingImg  = (i) => { _pendingImgs.splice(i,1);  refreshImgPreview(); };
+
+function fileToDataUrl(file) {
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function uploadPendingImgs(docId) {
+  if (!_pendingImgs.length) return [];
+  const uiEl  = document.getElementById('img-uploading');
+  const txtEl = document.getElementById('img-upload-txt');
+  if(uiEl) uiEl.style.display = 'flex';
+  const urls = [];
+  // Cloudinary unsigned upload — instant, no auth needed
+  const CLOUD = 'dkrlj5qby';
+  const PRESET = 'controleventify';
+  for(let i=0; i<_pendingImgs.length; i++){
+    const {file} = _pendingImgs[i];
+    if(txtEl) txtEl.textContent = `Subiendo ${i+1} de ${_pendingImgs.length}…`;
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', PRESET);
+    fd.append('folder', `panel/${_res}`);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`, {
+      method: 'POST', body: fd
+    });
+    const data = await res.json();
+    if(data.secure_url) urls.push(data.secure_url);
+    else throw new Error(data.error?.message || 'Upload failed');
+  }
+  if(uiEl) uiEl.style.display = 'none';
+  return urls;
+}
+
+/* ── QUICK IMAGE UPLOAD (🖼 button in table rows) ── */
+window.openImgUpload = (res, id) => {
+  const item = DB[res].find(x=>x.id===id);
+  _res=res; _id=id;
+  _pendingImgs  = [];
+  _existingImgs = item?.imagenes ? [...item.imagenes] : [];
+
+  const label = item?.nombre || item?.jugador || item?.asunto || item?.titulo || '—';
+  document.getElementById('m-ttl').textContent = '🖼 ' + label;
+  document.getElementById('m-body').innerHTML  = '';
+
+  // Build upload zone directly inside m-body
+  buildImgSection(document.getElementById('m-body'));
+
+  // Hide the static img section so it doesn't duplicate
+  const sec = document.getElementById('m-img-section');
+  if(sec) sec.style.display = 'none';
+
+  document.getElementById('ov').classList.add('on');
+};
+
+/* ── SAVE ── */
+window.saveRec = async () => {
+  const body={};
+  document.querySelectorAll('#m-body [id^="f-"]').forEach(el=>{body[el.id.replace('f-','')]=el.value.trim();});
+  if(_id && !document.querySelector('#m-body input')) {
+    // Quick image-only save
+    const newUrls = await uploadPendingImgs(_id);
+    const allUrls = [..._existingImgs, ...newUrls];
+    await updateDoc(doc(db,_res,_id),{imagenes: allUrls, updatedAt:serverTimestamp()});
+    showToast('Imágenes guardadas ✓');
+    closeModal(); return;
+  }
+  if(!body[REQ[_res]]){showToast('El campo requerido está vacío',true);return;}
+  try{
+    if(_id){
+      const newUrls = await uploadPendingImgs(_id);
+      const allUrls = [..._existingImgs, ...newUrls];
+      await updateDoc(doc(db,_res,_id),{...body, imagenes:allUrls, updatedAt:serverTimestamp()});
+      showToast('Actualizado correctamente ✓');
+    } else {
+      const saveBody={...body, createdAt:serverTimestamp()};
+      if(_res==='tasks') saveBody.done=false;
+      const ref = await addDoc(collection(db,_res),saveBody);
+      const newUrls = await uploadPendingImgs(ref.id);
+      if(newUrls.length){
+        await updateDoc(doc(db,_res,ref.id),{imagenes: newUrls});
+      }
+      showToast('Creado correctamente ✓');
+    }
+    closeModal();
+  }catch(e){showToast('Error: '+e.message,true);}
+};
+
+window.delRec = async (res,id) => {
+  if(!confirm('¿Eliminar este registro?'))return;
+  try{
+    await deleteDoc(doc(db,res,id));
+    showToast('Eliminado correctamente');
+  }catch(e){showToast(e.message,true);}
+};
+
+/* ── IMAGE VIEWER ── */
+let _viewerImgs=[], _viewerIdx=0;
+
+window.openViewer = (imgs, idx) => {
+  _viewerImgs = imgs;
+  _viewerIdx = idx;
+  updateViewer();
+  document.getElementById('img-viewer').classList.add('on');
+};
+window.closeViewer = (e) => {
+  if(!e || e.target===document.getElementById('img-viewer') || e.target.classList.contains('img-viewer-close'))
+    document.getElementById('img-viewer').classList.remove('on');
+};
+window.viewerNav = (dir) => {
+  _viewerIdx = (_viewerIdx + dir + _viewerImgs.length) % _viewerImgs.length;
+  updateViewer();
+};
+function updateViewer(){
+  document.getElementById('viewer-img').src = _viewerImgs[_viewerIdx];
+  document.getElementById('viewer-counter').textContent = `${_viewerIdx+1} / ${_viewerImgs.length}`;
+}
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('img-viewer').classList.contains('on')) return;
+  if(e.key==='ArrowLeft') viewerNav(-1);
+  if(e.key==='ArrowRight') viewerNav(1);
+  if(e.key==='Escape') closeViewer({target:document.getElementById('img-viewer')});
+});
+
+/* ── HELPERS ── */
+const rolB  = r=>{const m={admin:'bg4',mod:'bg3',vip:'bg2',jugador:'bg0'};return`<span class="bg ${m[r]||'bg0'}">${r||'—'}</span>`;};
+const estB  = e=>{const m={activo:'bg1',inactivo:'bg0',baneado:'bg3'};return`<span class="bg ${m[e]||'bg0'}">${e||'—'}</span>`;};
+const tipoB = t=>{const m={warn:'bg2',mute:'bg4',kick:'bg3',ban:'bg3'};return`<span class="bg ${m[t]||'bg0'}">${t||'—'}</span>`;};
+const catB  = c=>{const m={reporte:'bg3',apelacion:'bg4',soporte:'bg2',sugerencia:'bg1',otro:'bg0'};return`<span class="bg ${m[c]||'bg0'}">${c||'—'}</span>`;};
+const tkB   = e=>{const m={abierto:'bg1','en proceso':'bg2',cerrado:'bg0'};return`<span class="bg ${m[e]||'bg0'}">${e||'—'}</span>`;};
+const prioB = p=>{const m={alta:'bg3',media:'bg2',baja:'bg0'};return`<span class="bg ${m[p]||'bg0'}">${p||'—'}</span>`;};
+const eRow  = (c,m)=>`<tr><td colspan="${c}" style="text-align:center;padding:34px;color:var(--mu);font-family:var(--mo);font-size:12px">${m}</td></tr>`;
+const fd    = ts=>{if(!ts)return'—';const d=ts?.toDate?ts.toDate():new Date(ts);return d.toLocaleDateString('es',{day:'2-digit',month:'2-digit',year:'numeric'});};
+const esc   = s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+let _tt;
+window.showToast = (msg,err=false)=>{
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast on'+(err?' err':'');
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('on'),3200);
+};
+</script>
+</body>
+</html>
