@@ -275,6 +275,15 @@ tbody tr{cursor:pointer}
 .wcard-imgs{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
 .wcard-imgs img{width:44px;height:44px;border-radius:7px;object-fit:cover;border:1px solid var(--bd);cursor:pointer;transition:transform .15s}
 .wcard-imgs img:hover{transform:scale(1.1)}
+
+/* ── WARN ACCUMULATE DOTS ── */
+.warn-dot{user-select:none}
+.warn-dot.active-1{background:rgba(200,255,87,.15)!important;border-color:var(--a1)!important;color:var(--a1)!important}
+.warn-dot.active-2{background:rgba(87,200,255,.15)!important;border-color:var(--a2)!important;color:var(--a2)!important}
+.warn-dot.active-3{background:rgba(255,179,71,.15)!important;border-color:#ffb347!important;color:#ffb347!important}
+.warn-dot.active-4{background:rgba(181,87,255,.15)!important;border-color:var(--a4)!important;color:var(--a4)!important}
+.warn-dot.active-5{background:rgba(255,107,87,.2)!important;border-color:var(--a3)!important;color:var(--a3)!important;box-shadow:0 0 10px rgba(255,107,87,.25)!important}
+
 .sev-alta{background:rgba(255,107,87,.12);color:#ff6b57;font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
 .sev-media{background:rgba(87,200,255,.12);color:#57c8ff;font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
 .sev-baja{background:rgba(90,98,117,.15);color:var(--mu);font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
@@ -438,7 +447,7 @@ tbody tr{cursor:pointer}
           <input class="sb" id="us" placeholder="🔍 Buscar jugador…" oninput="renderUsers()"/>
         </div>
         <div style="overflow-x:auto">
-          <table><thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th><th>Discord</th><th>Notas</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <table><thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th><th>Discord</th><th>⚠ Warns</th><th>Notas</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
           <tbody id="u-tb"></tbody></table>
         </div>
       </div>
@@ -446,21 +455,46 @@ tbody tr{cursor:pointer}
 
     <!-- SANCIONES STAFF -->
     <div class="panel" id="panel-warns">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap">
+      <!-- Fila 1: título + búsqueda + botón -->
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap">
         <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🛡</div>
         <h2 style="font-size:22px;font-weight:800;letter-spacing:-.5px;flex:1">Sanciones <span style="color:var(--mu);font-weight:400">–</span> Staff</h2>
         <span id="w-badge" style="background:rgba(181,87,255,.15);border:1px solid rgba(181,87,255,.3);color:var(--a4);font-family:var(--mo);font-size:12px;font-weight:700;border-radius:20px;padding:3px 12px">0</span>
         <div style="display:flex;align-items:center;gap:8px;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:6px 12px">
           <span style="color:var(--mu);font-size:14px">🔍</span>
-          <input id="ws" placeholder="Buscar…" oninput="renderWarns()" style="background:transparent;border:none;outline:none;color:var(--tx);font-family:var(--mo);font-size:13px;width:160px"/>
-        </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap">
-          <button id="wf-reciente" class="wfbtn on" onclick="setWF('reciente',this)">Más reciente</button>
-          <button id="wf-todos" class="wfbtn" onclick="setWF('todos',this)">Todos</button>
-          <button id="wf-warn" class="wfbtn" onclick="setWF('warn',this)">⚠ Warn</button>
-          <button id="wf-ban" class="wfbtn" onclick="setWF('ban',this)">🔴 Ban</button>
+          <input id="ws" placeholder="Buscar jugador, motivo…" oninput="renderWarns()" style="background:transparent;border:none;outline:none;color:var(--tx);font-family:var(--mo);font-size:13px;width:180px"/>
         </div>
         <button class="btn" style="background:var(--a4);color:#fff;border-radius:10px" onclick="openWarnModal()">+ Sanción</button>
+      </div>
+      <!-- Fila 2: filtros tipo + ordenar por fecha + filtro severidad -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;padding:12px 16px;background:var(--s1);border:1px solid var(--bd);border-radius:12px">
+        <!-- Tipo -->
+        <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mu);font-family:var(--mo);margin-right:2px">Tipo</span>
+          <button id="wf-todos"    class="wfbtn on" onclick="setWF('todos',this)">Todos</button>
+          <button id="wf-warn"     class="wfbtn"    onclick="setWF('warn',this)">⚠ Warn</button>
+          <button id="wf-mute"     class="wfbtn"    onclick="setWF('mute',this)">🔇 Mute</button>
+          <button id="wf-kick"     class="wfbtn"    onclick="setWF('kick',this)">👢 Kick</button>
+          <button id="wf-ban"      class="wfbtn"    onclick="setWF('ban',this)">🔨 Ban</button>
+        </div>
+        <!-- Separador -->
+        <div style="width:1px;height:24px;background:var(--bd);margin:0 4px"></div>
+        <!-- Severidad -->
+        <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mu);font-family:var(--mo);margin-right:2px">Severidad</span>
+          <button id="wsev-todas"  class="wfbtn on" onclick="setWSev('todas',this)">Todas</button>
+          <button id="wsev-alta"   class="wfbtn"    onclick="setWSev('alta',this)"><span style="color:#ff6b57">●</span> Alta</button>
+          <button id="wsev-media"  class="wfbtn"    onclick="setWSev('media',this)"><span style="color:#f59e0b">●</span> Media</button>
+          <button id="wsev-baja"   class="wfbtn"    onclick="setWSev('baja',this)"><span style="color:#34d399">●</span> Baja</button>
+        </div>
+        <!-- Separador -->
+        <div style="width:1px;height:24px;background:var(--bd);margin:0 4px"></div>
+        <!-- Ordenar por fecha -->
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mu);font-family:var(--mo);margin-right:2px">Fecha</span>
+          <button id="wsort-desc" class="wfbtn on" onclick="setWSort('desc',this)">↓ Reciente</button>
+          <button id="wsort-asc"  class="wfbtn"    onclick="setWSort('asc',this)">↑ Antigua</button>
+        </div>
       </div>
       <div class="stats" style="margin-bottom:20px">
         <div class="sc"><div class="sc-l">Total</div><div class="sc-v c4" id="w-t">—</div></div>
@@ -718,7 +752,11 @@ tbody tr{cursor:pointer}
       <div class="img-preview-grid" id="w-extra-imgs" style="margin-top:8px"></div>
     </div>
     <div class="mr">
-      <div class="mf"><label>Jugador / Staff *</label><input id="w-jugador" placeholder="Nick"/></div>
+      <div class="mf"><label>Jugador / Staff *</label>
+        <select id="w-jugador">
+          <option value="">— Seleccionar miembro —</option>
+        </select>
+      </div>
       <div class="mf">
         <label>Severidad</label>
         <select id="w-severidad">
@@ -731,7 +769,11 @@ tbody tr{cursor:pointer}
     <div class="mf"><label>Razón *</label><input id="w-razon" placeholder="Motivo principal"/></div>
     <div class="mf"><label>Descripción detallada</label><textarea id="w-descripcion" placeholder="Contexto, evidencias, coordenadas..." style="min-height:80px"></textarea></div>
     <div class="mr">
-      <div class="mf"><label>Emitido por</label><input id="w-por" placeholder="Staff member"/></div>
+      <div class="mf"><label>Emitido por</label>
+        <select id="w-por">
+          <option value="">— Seleccionar —</option>
+        </select>
+      </div>
       <div class="mf"><label>Fecha</label><input id="w-fecha" type="date"/></div>
     </div>
     <div class="mf"><label>Network / Evento</label><input id="w-network" placeholder="Ej: Evento PvP, Red SkyBlock…"/></div>
@@ -918,18 +960,24 @@ window.renderUsers = (newIds=[]) => {
   document.getElementById('u-s').textContent = DB.users.filter(u=>u.rol==='admin'||u.rol==='mod').length;
   const tb = document.getElementById('u-tb');
   if (!rows.length) { tb.innerHTML = eRow(8,'Sin jugadores registrados'); return; }
-  tb.innerHTML = rows.map(u=>`<tr class="${newIds.includes(u.id)?'rt-new':''}" onclick="previewUser('${u.id}')">
+  const warnDotColors=['','#c8ff57','#57c8ff','#ffb347','#b557ff','#ff6b57'];
+  tb.innerHTML = rows.map(u=>{
+    const wa=parseInt(u.warnsacu)||0;
+    const warnBar=wa>0?`<div style="display:flex;gap:3px">${[1,2,3,4,5].map(n=>`<div style="width:14px;height:14px;border-radius:50%;background:${n<=wa?warnDotColors[wa]:'var(--s3)'};border:1.5px solid ${n<=wa?warnDotColors[wa]:'var(--bd)'}"></div>`).join('')}</div>`:'<span style="color:var(--mu);font-size:11px">—</span>';
+    return`<tr class="${newIds.includes(u.id)?'rt-new':''}" onclick="previewUser('${u.id}')">
     <td><b>${esc(u.nombre||'—')}</b></td>
     <td>${rolB(u.rol)}</td><td>${estB(u.estado)}</td>
     <td class="cd">${esc(u.discord||'—')}</td>
-    <td style="max-width:160px">${esc(u.notas||'—')}</td>
+    <td>${warnBar}</td>
+    <td style="max-width:140px">${esc(u.notas||'—')}</td>
     <td>${imgStack(u.imagenes,'users',u.id)}</td>
     <td class="cd">${fd(u.createdAt)}</td>
     <td><div class="ra" onclick="event.stopPropagation()">
       <button class="ia" onclick="editRec('users','${u.id}')">✏</button>
       <button class="ia img-btn" onclick="openImgUpload('users','${u.id}')">🖼</button>
       <button class="ia del" onclick="delRec('users','${u.id}')">✕</button>
-    </div></td></tr>`).join('');
+    </div></td></tr>`;
+  }).join('');
 };
 
 /* ══ DASHBOARD ══ */
@@ -1007,11 +1055,25 @@ window.renderDash=()=>{
 /* ── WARN STATE ── */
 let _wWarnImgs = []; // {dataUrl, file}
 let _wWarnExtraImgs = []; // extra pending
-let _warnFilter = 'reciente';
+let _warnFilter = 'todos';
+let _warnSev    = 'todas';
+let _warnSort   = 'desc';
 
 window.setWF = (f, btn) => {
   _warnFilter = f;
-  document.querySelectorAll('.wfbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('#wf-todos,#wf-warn,#wf-mute,#wf-kick,#wf-ban').forEach(b=>b?.classList.remove('on'));
+  btn.classList.add('on');
+  renderWarns();
+};
+window.setWSev = (s, btn) => {
+  _warnSev = s;
+  document.querySelectorAll('#wsev-todas,#wsev-alta,#wsev-media,#wsev-baja').forEach(b=>b?.classList.remove('on'));
+  btn.classList.add('on');
+  renderWarns();
+};
+window.setWSort = (s, btn) => {
+  _warnSort = s;
+  document.querySelectorAll('#wsort-desc,#wsort-asc').forEach(b=>b?.classList.remove('on'));
   btn.classList.add('on');
   renderWarns();
 };
@@ -1022,10 +1084,27 @@ window.renderWarns = (newIds=[]) => {
   const now=new Date(),m=now.getMonth(),y=now.getFullYear();
   let rows = [...DB.warns];
 
-  // Filter by type button
-  if(_warnFilter==='warn') rows=rows.filter(w=>w.tipo==='warn'||w.tipo==='mute'||w.tipo==='kick');
-  else if(_warnFilter==='ban') rows=rows.filter(w=>w.tipo==='ban');
-  // Search
+  // ── Filter by tipo ──
+  if(_warnFilter==='warn')  rows=rows.filter(w=>w.tipo==='warn');
+  else if(_warnFilter==='mute') rows=rows.filter(w=>w.tipo==='mute');
+  else if(_warnFilter==='kick') rows=rows.filter(w=>w.tipo==='kick');
+  else if(_warnFilter==='ban')  rows=rows.filter(w=>w.tipo==='ban');
+
+  // ── Filter by severidad ──
+  if(_warnSev==='alta')  rows=rows.filter(w=>w.severidad==='alta');
+  else if(_warnSev==='media') rows=rows.filter(w=>w.severidad==='media');
+  else if(_warnSev==='baja')  rows=rows.filter(w=>w.severidad==='baja');
+
+  // ── Sort by date ──
+  const getDate = w => {
+    if(w.fecha) return new Date(w.fecha);
+    if(w.createdAt?.toDate) return w.createdAt.toDate();
+    return new Date(w.createdAt||0);
+  };
+  if(_warnSort==='desc') rows.sort((a,b)=>getDate(b)-getDate(a));
+  else rows.sort((a,b)=>getDate(a)-getDate(b));
+
+  // ── Search ──
   if(q) rows=rows.filter(w=>
     w.jugador?.toLowerCase().includes(q)||
     w.razon?.toLowerCase().includes(q)||
@@ -1202,6 +1281,19 @@ const FORMS={
       <option value="baneado">Baneado</option>
     </select></div>
   </div>
+  <div class="mf">
+    <label>⚠ Warns acumulados <span style="font-size:9px;color:var(--mu);font-family:var(--mo)">(máx 5)</span></label>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:6px" id="warns-stars">
+      ${[1,2,3,4,5].map(n=>\`<label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px">
+        <input type="radio" name="f-warns-acu" id="f-warns-\${n}" value="\${n}" style="display:none" onchange="updateWarnsDots()"/>
+        <div class="warn-dot" data-n="\${n}" onclick="setWarnDot(\${n})" style="width:32px;height:32px;border-radius:50%;background:var(--s3);border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--mu);transition:all .2s;cursor:pointer">\${n}</div>
+      </label>\`).join('')}
+      <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px">
+        <div class="warn-dot" data-n="0" onclick="setWarnDot(0)" style="width:32px;height:32px;border-radius:50%;background:var(--s3);border:2px dashed var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mu);transition:all .2s;cursor:pointer">✕</div>
+      </label>
+    </div>
+    <input type="hidden" id="f-warnsacu" value="0"/>
+  </div>
   <div class="mf"><label>Notas</label><textarea id="f-notas"></textarea></div>`,
 
   warns:`<div class="mr">
@@ -1258,6 +1350,17 @@ const FORMS={
 const TITLES={users:'Jugador',warns:'Sanción',tickets:'Ticket',tasks:'Tarea'};
 const REQ={users:'nombre',warns:'jugador',tickets:'asunto',tasks:'titulo'};
 
+
+window.setWarnDot = (n) => {
+  document.getElementById('f-warnsacu').value = n;
+  document.querySelectorAll('.warn-dot').forEach(d=>{
+    const dn = parseInt(d.dataset.n);
+    d.classList.remove('active-1','active-2','active-3','active-4','active-5');
+    if(n>0 && dn<=n && dn>0) d.classList.add('active-'+n);
+    if(n===0 && dn===0) d.style.borderColor='var(--a3)';
+    else if(dn===0) d.style.borderColor='var(--bd)';
+  });
+};
 window.openModal = (res, id=null) => {
   _res=res; _id=id;
   _pendingImgs=[];
@@ -1270,6 +1373,8 @@ window.openModal = (res, id=null) => {
     const item=DB[res].find(x=>x.id===id);
     if(item){
       Object.keys(item).forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=item[k]??'';});
+      // Restore warn dots if present
+      if(item.warnsacu) setTimeout(()=>window.setWarnDot(parseInt(item.warnsacu)||0),50);
       _existingImgs = item.imagenes ? [...item.imagenes] : [];
     }
   }
@@ -1552,7 +1657,7 @@ function evCard(e){
   const dt=new Date(e.fecha||'');
   const canEdit=window._P?.IS_OWN||window._P?.IS_ADM;
   const imgs=e.imagenes||[];
-  return`<div class="tc" style="margin-bottom:10px;align-items:stretch">
+  return`<div class="tc" style="margin-bottom:10px;align-items:stretch;cursor:pointer" onclick="previewEvento('${e.id}')">
     <div style="width:4px;background:${tp.col};border-radius:4px;flex-shrink:0;margin-right:12px"></div>
     ${imgs.length?`<img src="${imgs[0]}" onclick="openViewer(${JSON.stringify(imgs)},0)" style="width:72px;height:72px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--bd);cursor:pointer;transition:transform .15s;align-self:center;margin-right:4px" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''"/>`:''}
     <div class="tb2" style="flex:1">
@@ -1567,7 +1672,7 @@ function evCard(e){
       ${e.desc?`<div style="font-size:12px;color:var(--mu);margin-top:5px">${esc(e.desc)}</div>`:''}
       <div style="font-size:10px;color:var(--mu);font-family:var(--mo);margin-top:6px">📅 ${dt.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
     </div>
-    ${canEdit?`<div style="display:flex;gap:4px;flex-shrink:0;align-self:flex-start">
+    ${canEdit?`<div style="display:flex;gap:4px;flex-shrink:0;align-self:flex-start" onclick="event.stopPropagation()">
       <button class="ia" onclick="editEvento('${e.id}')">✏</button>
       <button class="ia del" onclick="delEvento('${e.id}')">✕</button>
     </div>`:''}
@@ -1694,14 +1799,17 @@ window.renderIdeas=()=>{
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
       ${list.map(i=>{
         const canDel=window._P?.IS_OWN||(CU.username||CU)===i.by;
-        return`<div class="tc" style="flex-direction:column;align-items:flex-start;gap:8px">
+        const imgs=(i.imagenes||[]);
+        return`<div class="tc" style="flex-direction:column;align-items:flex-start;gap:8px;cursor:pointer" onclick="previewIdea('${i.id}')">
+          ${imgs.length?`<img src="${imgs[0]}" style="width:100%;height:130px;object-fit:cover;border-radius:8px;border:1px solid var(--bd)" onclick="event.stopPropagation();openViewer(${JSON.stringify(imgs)},0)"/>`:''}
           <div class="tt2">💡 ${esc(i.titulo||'')}</div>
-          <div style="font-size:12px;color:var(--mu);line-height:1.5">${esc((i.desc||'').slice(0,150))}${(i.desc||'').length>150?'...':''}</div>
-          ${(i.imagenes||[]).length?`<div class="tc-imgs">${i.imagenes.map((url,idx)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(i.imagenes)},${idx})"/>`).join('')}</div>`:''}
-          ${(i.links||[]).length?`<div style="display:flex;flex-direction:column;gap:3px">${i.links.map(l=>`<a href="${esc(l)}" target="_blank" style="font-size:11px;color:var(--a2);text-decoration:underline;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l).slice(0,50)}</a>`).join('')}</div>`:''}
+          <div style="font-size:12px;color:var(--mu);line-height:1.5">${esc((i.desc||'').slice(0,100))}${(i.desc||'').length>100?'…':''}</div>
           <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:4px">
             <span style="font-size:10px;color:var(--mu);font-family:var(--mo)">👤 ${i.by} · ${fd(i.createdAt)}</span>
-            ${canDel?`<button class="ia del" onclick="delIdea('${i.id}')">✕</button>`:''}
+            <div style="display:flex;gap:5px" onclick="event.stopPropagation()">
+              ${imgs.length?`<span style="font-size:10px;color:var(--a2);font-family:var(--mo)">🖼 ${imgs.length}</span>`:''}
+              ${canDel?`<button class="ia del" onclick="delIdea('${i.id}')">✕</button>`:''}
+            </div>
           </div>
         </div>`;
       }).join('')}
@@ -1737,6 +1845,62 @@ window.saveIdea=async()=>{
 window.delIdea=async id=>{
   if(!confirm('¿Eliminar esta idea?'))return;
   try{await deleteDoc(doc(db,'ideas',id));showToast('Eliminado');}catch(e){showToast(e.message,true);}
+};
+
+/* ══ PREVIEW IDEA ══ */
+window.previewIdea = id => {
+  const i = DB.ideas.find(x=>x.id===id); if(!i) return;
+  const imgs = i.imagenes||[];
+  const canDel = window._P?.IS_OWN || (CU.username||CU)===i.by;
+  const rows = `
+    <div style="margin-bottom:4px">
+      ${imgs.length ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin-bottom:14px">
+        ${imgs.map((url,idx)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(imgs)},${idx})" style="width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover;border:1px solid var(--bd);cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''"/>`).join('')}
+      </div>` : ''}
+    </div>
+    ${pdRow('Título', `<b style="font-size:16px">${esc(i.titulo||'—')}</b>`)}
+    ${i.desc ? pdRow('Descripción / Concepto', `<div style="white-space:pre-wrap;line-height:1.7;font-size:13px">${esc(i.desc)}</div>`) : ''}
+    ${pdRow('Propuesto por', `<span style="color:var(--a4);font-family:var(--mo)">${esc(i.by||'—')}</span>`)}
+    ${pdRow('Fecha', fd(i.createdAt))}
+    ${(i.links||[]).length ? `<div class="pd-row">
+      <div class="pd-label">Links de referencia</div>
+      <div class="pd-value" style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
+        ${i.links.map(l=>`<a href="${esc(l)}" target="_blank" style="color:var(--a2);font-family:var(--mo);font-size:12px;word-break:break-all">${esc(l)}</a>`).join('')}
+      </div>
+    </div>` : ''}
+  `;
+  openPreview('💡', i.titulo||'Idea', rows,
+    canDel ? `<button class="btn sm coral" onclick="closePreview();delIdea('${i.id}')">✕ Eliminar</button>` : ''
+  );
+};
+
+/* ══ PREVIEW EVENTO ══ */
+window.previewEvento = id => {
+  const e = DB.eventos.find(x=>x.id===id); if(!e) return;
+  const tp = EV_TIPOS[e.tipo]||EV_TIPOS.evento;
+  const st = evStatus(e);
+  const dt = new Date(e.fecha||'');
+  const imgs = e.imagenes||[];
+  const canEdit = window._P?.IS_OWN||window._P?.IS_ADM;
+  const rows = `
+    <div style="margin-bottom:4px">
+      ${imgs.length ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin-bottom:14px">
+        ${imgs.map((url,idx)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(imgs)},${idx})" style="width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover;border:1px solid var(--bd);cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''"/>`).join('')}
+      </div>` : ''}
+    </div>
+    ${pdRow('Nombre', `<b style="font-size:16px">${tp.ic} ${esc(e.nombre||'—')}</b>`)}
+    ${pdRow('Tipo', `<span class="bg bg1">${tp.lbl}</span>`)}
+    ${pdRow('Estado', `<span class="bg ${st.cls}">${st.l}</span>`)}
+    ${pdRow('Fecha', `<span style="color:var(--a2);font-family:var(--mo)">📅 ${dt.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</span>`)}
+    ${e.hora ? pdRow('Hora', `<span style="font-family:var(--mo)">🕐 ${e.hora}</span>`) : ''}
+    ${e.desc ? pdRow('Descripción', `<div style="white-space:pre-wrap;line-height:1.7">${esc(e.desc)}</div>`) : ''}
+    ${e.link ? pdRow('Link', `<a href="${esc(e.link)}" target="_blank" style="color:var(--a2);font-family:var(--mo);font-size:12px;word-break:break-all">${esc(e.link)}</a>`) : ''}
+    ${e.by ? pdRow('Creado por', `<span style="color:var(--a4);font-family:var(--mo)">${esc(e.by)}</span>`) : ''}
+  `;
+  openPreview(tp.ic, e.nombre||'Evento', rows,
+    canEdit ? `<button class="btn sm sky" onclick="closePreview();editEvento('${e.id}')">✏ Editar</button>
+               <button class="btn sm coral" onclick="closePreview();delEvento('${e.id}')">✕ Eliminar</button>` : ''
+  );
 };
 
 /* ══ EQUIPO ══ */
@@ -1815,6 +1979,7 @@ window.previewUser=id=>{
     ${pdRow('Rol',rolB(u.rol))}
     ${pdRow('Estado',estB(u.estado))}
     ${pdRow('Notas',u.notas?esc(u.notas):'—')}
+    ${(()=>{const wa=parseInt(u.warnsacu)||0;const warnDotColors=['','#c8ff57','#57c8ff','#ffb347','#b557ff','#ff6b57'];return wa>0?pdRow('Warns acumulados',`<div style="display:flex;gap:5px;align-items:center">${[1,2,3,4,5].map(n=>`<div style="width:20px;height:20px;border-radius:50%;background:${n<=wa?warnDotColors[wa]+'22':'var(--s3)'};border:2px solid ${n<=wa?warnDotColors[wa]:'var(--bd)'};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:${n<=wa?warnDotColors[wa]:'var(--mu)'}">${n}</div>`).join('')}<span style="font-size:11px;color:var(--mu);font-family:var(--mo);margin-left:6px">${wa}/5</span></div>`):pdRow('Warns acumulados','<span style="color:var(--a1)">0 / 5 ✓</span>');})()}
     ${pdRow('Warns',warns>0?`<span style="color:var(--a3);font-weight:700">${warns} sanción(es)</span>`:''||'<span style="color:var(--a1)">Sin sanciones ✓</span>')}
     ${pdRow('Tickets',`${tickets} ticket(s)`)}
     ${pdRow('Registrado',fd(u.createdAt))}
@@ -1892,13 +2057,19 @@ window.openWarnModal=(id=null)=>{
   const today=new Date().toISOString().split('T')[0];
   document.getElementById('w-edit-id').value=id||'';
   document.getElementById('w-tipo').value='warn';
-  document.getElementById('w-jugador').value='';
   document.getElementById('w-severidad').value='alta';
   document.getElementById('w-razon').value='';
   document.getElementById('w-descripcion').value='';
-  document.getElementById('w-por').value=CU?.username||'';
   document.getElementById('w-fecha').value=today;
   document.getElementById('w-network').value='';
+  // Populate staff dropdowns
+  const staffOpts = STAFF.map(s=>`<option value="${s.username}">${s.username} · ${s.role}</option>`).join('');
+  const juEl=document.getElementById('w-jugador');
+  const poEl=document.getElementById('w-por');
+  juEl.innerHTML='<option value="">— Seleccionar miembro —</option>'+staffOpts;
+  poEl.innerHTML='<option value="">— Seleccionar —</option>'+staffOpts;
+  juEl.value='';
+  poEl.value=CU?.username||'';
   document.getElementById('w-thumb-img').src='';
   document.getElementById('w-thumb-img').style.display='none';
   document.getElementById('w-thumb-placeholder').style.display='';
@@ -1909,7 +2080,7 @@ window.openWarnModal=(id=null)=>{
     if(w){
       document.getElementById('warn-ttl').textContent='Editar Sanción · Staff';
       document.getElementById('w-tipo').value=w.tipo||'warn';
-      document.getElementById('w-jugador').value=w.jugador||w.jugador||'';
+      document.getElementById('w-jugador').value=w.jugador||'';
       document.getElementById('w-severidad').value=w.severidad||'alta';
       document.getElementById('w-razon').value=w.razon||w.motivo||'';
       document.getElementById('w-descripcion').value=w.descripcion||w.desc||'';
