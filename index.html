@@ -254,6 +254,30 @@ tbody tr{cursor:pointer}
 /* ── EQUIPO CARD CLICK ── */
 .ecard{cursor:pointer;transition:border-color .2s,transform .15s}
 .ecard:hover{transform:translateY(-2px)}
+/* ── WARN FILTER BUTTONS ── */
+.wfbtn{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:6px 13px;font-family:var(--fn);font-size:12px;font-weight:600;color:var(--mu);cursor:pointer;transition:all .2s;white-space:nowrap}
+.wfbtn:hover{color:var(--tx)}
+.wfbtn.on{color:var(--a4);border-color:rgba(181,87,255,.4);background:rgba(181,87,255,.08)}
+/* ── WARN CARD ── */
+.wcard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px 18px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;transition:border-color .18s,transform .15s;cursor:pointer;position:relative;overflow:hidden}
+.wcard:hover{border-color:rgba(181,87,255,.3);transform:translateX(3px)}
+.wcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:4px 0 0 4px}
+.wcard.t-warn::before{background:#57c8ff}
+.wcard.t-mute::before{background:#b557ff}
+.wcard.t-kick::before{background:#ff9f57}
+.wcard.t-ban::before{background:#ff6b57}
+.wcard-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.wcard-body{flex:1;min-width:0}
+.wcard-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.wcard-player{font-size:15px;font-weight:700}
+.wcard-info{display:flex;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--mu);font-family:var(--mo)}
+.wcard-desc{font-size:12px;color:var(--mu);margin-top:4px;line-height:1.5}
+.wcard-imgs{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.wcard-imgs img{width:44px;height:44px;border-radius:7px;object-fit:cover;border:1px solid var(--bd);cursor:pointer;transition:transform .15s}
+.wcard-imgs img:hover{transform:scale(1.1)}
+.sev-alta{background:rgba(255,107,87,.12);color:#ff6b57;font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
+.sev-media{background:rgba(87,200,255,.12);color:#57c8ff;font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
+.sev-baja{background:rgba(90,98,117,.15);color:var(--mu);font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
 </style>
 </head>
 <body>
@@ -318,25 +342,33 @@ tbody tr{cursor:pointer}
       </div>
     </div>
 
-    <!-- WARNS -->
+    <!-- SANCIONES STAFF -->
     <div class="panel" id="panel-warns">
-      <div class="ph">
-        <div><h2>Warns <b>/ Sanciones</b></h2><p>Registro de advertencias y sanciones · tiempo real</p></div>
-        <button class="btn coral" onclick="openModal('warns')">+ Nueva sanción</button>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🛡</div>
+        <h2 style="font-size:22px;font-weight:800;letter-spacing:-.5px;flex:1">Sanciones <span style="color:var(--mu);font-weight:400">–</span> Staff</h2>
+        <span id="w-badge" style="background:rgba(181,87,255,.15);border:1px solid rgba(181,87,255,.3);color:var(--a4);font-family:var(--mo);font-size:12px;font-weight:700;border-radius:20px;padding:3px 12px">0</span>
+        <div style="display:flex;align-items:center;gap:8px;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:6px 12px">
+          <span style="color:var(--mu);font-size:14px">🔍</span>
+          <input id="ws" placeholder="Buscar…" oninput="renderWarns()" style="background:transparent;border:none;outline:none;color:var(--tx);font-family:var(--mo);font-size:13px;width:160px"/>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          <button id="wf-reciente" class="wfbtn on" onclick="setWF('reciente',this)">Más reciente</button>
+          <button id="wf-todos" class="wfbtn" onclick="setWF('todos',this)">Todos</button>
+          <button id="wf-warn" class="wfbtn" onclick="setWF('warn',this)">⚠ Warn</button>
+          <button id="wf-ban" class="wfbtn" onclick="setWF('ban',this)">🔴 Ban</button>
+        </div>
+        <button class="btn" style="background:var(--a4);color:#fff;border-radius:10px" onclick="openWarnModal()">+ Sanción</button>
       </div>
-      <div class="stats">
-        <div class="sc"><div class="sc-l">Total</div><div class="sc-v c3" id="w-t">—</div></div>
+      <div class="stats" style="margin-bottom:20px">
+        <div class="sc"><div class="sc-l">Total</div><div class="sc-v c4" id="w-t">—</div></div>
         <div class="sc"><div class="sc-l">Warns</div><div class="sc-v c2" id="w-w">—</div></div>
+        <div class="sc"><div class="sc-l">Mutes</div><div class="sc-v c4" id="w-mu">—</div></div>
+        <div class="sc"><div class="sc-l">Kicks</div><div class="sc-v c1" id="w-k">—</div></div>
         <div class="sc"><div class="sc-l">Bans</div><div class="sc-v c3" id="w-b">—</div></div>
         <div class="sc"><div class="sc-l">Este mes</div><div class="sc-v c1" id="w-m">—</div></div>
       </div>
-      <div class="tw">
-        <div class="tt"><input class="sb" id="ws" placeholder="🔍 Buscar…" oninput="renderWarns()"/></div>
-        <div style="overflow-x:auto">
-          <table><thead><tr><th>Jugador</th><th>Tipo</th><th>Motivo</th><th>Por</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
-          <tbody id="w-tb"></tbody></table>
-        </div>
-      </div>
+      <div id="w-cards"></div>
     </div>
 
     <!-- TICKETS -->
@@ -541,6 +573,65 @@ tbody tr{cursor:pointer}
   </div>
 </div>
 
+
+<!-- MODAL WARN STAFF -->
+<div class="ov" id="ov-warn" onclick="if(event.target===this)closeWarnModal()">
+  <div class="modal" style="width:560px">
+    <button class="mc" onclick="closeWarnModal()">×</button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
+      <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:center;font-size:16px">🛡</div>
+      <h3 style="margin:0;font-size:16px;font-weight:800" id="warn-ttl">Nueva Sanción · Staff</h3>
+    </div>
+    <div class="mf">
+      <label>Tipo de Sanción</label>
+      <select id="w-tipo" onchange="updateWarnIcon()">
+        <option value="warn">⚠ Warn</option>
+        <option value="mute">🔇 Mute</option>
+        <option value="kick">👢 Kick</option>
+        <option value="ban">🔨 Ban</option>
+      </select>
+    </div>
+    <div class="mf">
+      <label>Foto / Evidencia</label>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="w-img-thumb" style="width:56px;height:56px;border-radius:10px;background:var(--s3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden">
+          <span id="w-thumb-placeholder">🖼</span>
+          <img id="w-thumb-img" src="" style="display:none;width:100%;height:100%;object-fit:cover"/>
+        </div>
+        <div>
+          <button class="btn-g sm" onclick="document.getElementById('w-file-input').click()">Subir foto</button>
+          <input type="file" id="w-file-input" accept="image/*" style="display:none" onchange="handleWarnImg(event)"/>
+          <div id="w-file-name" style="font-size:11px;color:var(--mu);font-family:var(--mo);margin-top:5px">Sin archivo</div>
+        </div>
+      </div>
+      <div class="img-preview-grid" id="w-extra-imgs" style="margin-top:8px"></div>
+    </div>
+    <div class="mr">
+      <div class="mf"><label>Jugador / Staff *</label><input id="w-jugador" placeholder="Nick"/></div>
+      <div class="mf">
+        <label>Severidad</label>
+        <select id="w-severidad">
+          <option value="alta">🔴 Alta</option>
+          <option value="media">🟡 Media</option>
+          <option value="baja">🟢 Baja</option>
+        </select>
+      </div>
+    </div>
+    <div class="mf"><label>Razón *</label><input id="w-razon" placeholder="Motivo principal"/></div>
+    <div class="mf"><label>Descripción detallada</label><textarea id="w-descripcion" placeholder="Contexto, evidencias, coordenadas..." style="min-height:80px"></textarea></div>
+    <div class="mr">
+      <div class="mf"><label>Emitido por</label><input id="w-por" placeholder="Staff member"/></div>
+      <div class="mf"><label>Fecha</label><input id="w-fecha" type="date"/></div>
+    </div>
+    <div class="mf"><label>Network / Evento</label><input id="w-network" placeholder="Ej: Evento PvP, Red SkyBlock…"/></div>
+    <input type="hidden" id="w-edit-id"/>
+    <div class="mbtns">
+      <button class="btn-g" onclick="closeWarnModal()">Cancelar</button>
+      <button class="btn" style="background:var(--a4);color:#fff" onclick="saveWarn()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -722,31 +813,95 @@ window.renderUsers = (newIds=[]) => {
     </div></td></tr>`).join('');
 };
 
+/* ── WARN STATE ── */
+let _wWarnImgs = []; // {dataUrl, file}
+let _wWarnExtraImgs = []; // extra pending
+let _warnFilter = 'reciente';
+
+window.setWF = (f, btn) => {
+  _warnFilter = f;
+  document.querySelectorAll('.wfbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderWarns();
+};
+
 /* ── RENDER WARNS ── */
 window.renderWarns = (newIds=[]) => {
-  const q = document.getElementById('ws').value.toLowerCase();
-  const rows = DB.warns.filter(w=>!q||w.jugador?.toLowerCase().includes(q)||w.motivo?.toLowerCase().includes(q));
+  const q = (document.getElementById('ws')?.value||'').toLowerCase();
   const now=new Date(),m=now.getMonth(),y=now.getFullYear();
-  document.getElementById('w-t').textContent = DB.warns.length;
-  document.getElementById('w-w').textContent = DB.warns.filter(w=>w.tipo!=='ban').length;
-  document.getElementById('w-b').textContent = DB.warns.filter(w=>w.tipo==='ban').length;
-  document.getElementById('w-m').textContent = DB.warns.filter(w=>{
+  let rows = [...DB.warns];
+
+  // Filter by type button
+  if(_warnFilter==='warn') rows=rows.filter(w=>w.tipo==='warn'||w.tipo==='mute'||w.tipo==='kick');
+  else if(_warnFilter==='ban') rows=rows.filter(w=>w.tipo==='ban');
+  // Search
+  if(q) rows=rows.filter(w=>
+    w.jugador?.toLowerCase().includes(q)||
+    w.razon?.toLowerCase().includes(q)||
+    w.motivo?.toLowerCase().includes(q)||
+    w.por?.toLowerCase().includes(q)||
+    w.network?.toLowerCase().includes(q)||
+    w.descripcion?.toLowerCase().includes(q)
+  );
+
+  // Stats
+  document.getElementById('w-t').textContent  = DB.warns.length;
+  document.getElementById('w-w').textContent  = DB.warns.filter(w=>w.tipo==='warn').length;
+  document.getElementById('w-mu').textContent = DB.warns.filter(w=>w.tipo==='mute').length;
+  document.getElementById('w-k').textContent  = DB.warns.filter(w=>w.tipo==='kick').length;
+  document.getElementById('w-b').textContent  = DB.warns.filter(w=>w.tipo==='ban').length;
+  document.getElementById('w-m').textContent  = DB.warns.filter(w=>{
     const d=w.createdAt?.toDate?w.createdAt.toDate():new Date(w.createdAt||0);
     return d.getMonth()===m&&d.getFullYear()===y;
   }).length;
-  const tb = document.getElementById('w-tb');
-  if (!rows.length) { tb.innerHTML = eRow(7,'Sin sanciones registradas'); return; }
-  tb.innerHTML = rows.map(w=>`<tr class="${newIds.includes(w.id)?'rt-new':''}" onclick="previewWarn('${w.id}')">
-    <td><b>${esc(w.jugador||'—')}</b></td>
-    <td>${tipoB(w.tipo)}</td>
-    <td style="max-width:200px">${esc(w.motivo||'—')}</td>
-    <td>${esc(w.por||'—')}</td>
-    <td>${imgStack(w.imagenes,'warns',w.id)}</td>
-    <td class="cd">${fd(w.createdAt)}</td>
-    <td><div class="ra" onclick="event.stopPropagation()">
-      <button class="ia img-btn" onclick="openImgUpload('warns','${w.id}')">🖼</button>
-      <button class="ia del" onclick="delRec('warns','${w.id}')">✕</button>
-    </div></td></tr>`).join('');
+  const badge=document.getElementById('w-badge');
+  if(badge) badge.textContent=DB.warns.length;
+
+  const container = document.getElementById('w-cards');
+  if(!rows.length){
+    container.innerHTML=`<div class="empty" style="padding:60px;text-align:center">
+      <div style="font-size:42px;opacity:.2;margin-bottom:12px">🛡</div>
+      <p style="font-size:13px;color:var(--mu);font-family:var(--mo)">Sin sanciones de staff</p>
+    </div>`;return;
+  }
+
+  const TIPO_META={
+    warn:{ic:'⚠',col:'#57c8ff',bg:'rgba(87,200,255,.1)',cls:'t-warn'},
+    mute:{ic:'🔇',col:'#b557ff',bg:'rgba(181,87,255,.1)',cls:'t-mute'},
+    kick:{ic:'👢',col:'#ffb347',bg:'rgba(255,179,71,.1)',cls:'t-kick'},
+    ban :{ic:'🔨',col:'#ff6b57',bg:'rgba(255,107,87,.1)',cls:'t-ban'},
+  };
+
+  container.innerHTML = rows.map(w => {
+    const tm = TIPO_META[w.tipo]||TIPO_META.warn;
+    const imgs = w.imagenes||[];
+    const sevCls = w.severidad==='alta'?'sev-alta':w.severidad==='media'?'sev-media':'sev-baja';
+    const sevLbl = w.severidad==='alta'?'● Alta':w.severidad==='media'?'● Media':'● Baja';
+    const isNew = newIds.includes(w.id);
+    return`<div class="wcard ${tm.cls} ${isNew?'rt-new':''}" onclick="previewWarn('${w.id}')">
+      <div class="wcard-icon" style="background:${tm.bg};color:${tm.col}">${tm.ic}</div>
+      <div class="wcard-body">
+        <div class="wcard-top">
+          <span class="wcard-player">${esc(w.jugador||'—')}</span>
+          <span class="bg bg${w.tipo==='ban'?'3':w.tipo==='kick'?'3':w.tipo==='mute'?'4':'2'}">${w.tipo||'warn'}</span>
+          <span class="${sevCls}">${sevLbl}</span>
+          ${w.network?`<span style="font-size:10px;color:var(--a2);font-family:var(--mo);background:rgba(87,200,255,.06);border:1px solid rgba(87,200,255,.2);border-radius:4px;padding:1px 7px">🌐 ${esc(w.network)}</span>`:''}
+        </div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:3px">${esc(w.razon||w.motivo||'Sin motivo')}</div>
+        ${(w.descripcion||w.desc)?`<div class="wcard-desc">${esc((w.descripcion||w.desc||'').slice(0,120))}${(w.descripcion||w.desc||'').length>120?'…':''}</div>`:''}
+        <div class="wcard-info" style="margin-top:6px">
+          <span>👤 ${esc(w.por||'—')}</span>
+          <span>📅 ${w.fecha||fd(w.createdAt)}</span>
+          ${imgs.length?`<span>🖼 ${imgs.length} img</span>`:''}
+        </div>
+        ${imgs.length?`<div class="wcard-imgs">${imgs.slice(0,4).map((url,i)=>`<img src="${url}" onclick="event.stopPropagation();openViewer(${JSON.stringify(imgs)},${i})"/>`).join('')}${imgs.length>4?`<span style="font-size:10px;color:var(--a2);font-family:var(--mo);align-self:center">+${imgs.length-4}</span>`:''}</div>`:''}
+      </div>
+      <div onclick="event.stopPropagation()" style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">
+        <button class="ia" onclick="openWarnModal('${w.id}')">✏</button>
+        <button class="ia del" onclick="delRec('warns','${w.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
 };
 
 /* ── RENDER TICKETS ── */
@@ -1426,16 +1581,26 @@ window.previewUser=id=>{
 };
 window.previewWarn=id=>{
   const w=DB.warns.find(x=>x.id===id);if(!w)return;
-  const tipoCols={warn:'c2',mute:'c4',kick:'c3',ban:'c3'};
+  const TIPO_META={warn:{ic:'⚠',col:'#57c8ff'},mute:{ic:'🔇',col:'#b557ff'},kick:{ic:'👢',col:'#ffb347'},ban:{ic:'🔨',col:'#ff6b57'}};
+  const tm=TIPO_META[w.tipo]||TIPO_META.warn;
+  const sevCls=w.severidad==='alta'?'sev-alta':w.severidad==='media'?'sev-media':'sev-baja';
+  const imgs=w.imagenes||[];
   let rows=`
-    ${pdRow('Jugador',`<b>${esc(w.jugador||'—')}</b>`)}
+    <div style="text-align:center;padding:10px 0 16px">
+      <div style="width:52px;height:52px;border-radius:14px;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 10px">${tm.ic}</div>
+    </div>
+    ${pdRow('Jugador / Staff',`<b style="font-size:15px">${esc(w.jugador||'—')}</b>`)}
     ${pdRow('Tipo',tipoB(w.tipo))}
-    ${pdRow('Motivo',w.motivo?esc(w.motivo):'—')}
-    ${pdRow('Sancionado por',w.por?`<span style="color:var(--a4);font-family:var(--mo)">${esc(w.por)}</span>`:'—')}
-    ${pdRow('Fecha',fd(w.createdAt))}
-    ${w.imagenes&&w.imagenes.length?`<div class="pd-row"><div class="pd-label">Evidencia (${w.imagenes.length})</div><div class="pd-imgs">${w.imagenes.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(w.imagenes)},${i})"/>`).join('')}</div></div>`:''}`;
-  openPreview('⚠️',`Sanción · ${w.jugador||'—'}`,rows,
-    `<button class="btn sm coral" onclick="closePreview();delRec('warns','${w.id}')">✕ Eliminar</button>`);
+    ${pdRow('Severidad',`<span class="${sevCls}">${w.severidad||'—'}</span>`)}
+    ${pdRow('Razón',w.razon||w.motivo?`<b>${esc(w.razon||w.motivo)}</b>`:'—')}
+    ${(w.descripcion||w.desc)?pdRow('Descripción',`<div style="white-space:pre-wrap;line-height:1.6">${esc(w.descripcion||w.desc)}</div>`):''}
+    ${pdRow('Emitido por',w.por?`<span style="color:var(--a4);font-family:var(--mo)">${esc(w.por)}</span>`:'—')}
+    ${pdRow('Fecha',w.fecha||fd(w.createdAt))}
+    ${w.network?pdRow('Network / Evento',`<span style="color:var(--a2);font-family:var(--mo)">${esc(w.network)}</span>`):''}
+    ${imgs.length?`<div class="pd-row"><div class="pd-label">Evidencia (${imgs.length})</div><div class="pd-imgs">${imgs.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(imgs)},${i})"/>`).join('')}</div></div>`:''}`;
+  openPreview(tm.ic,`Sanción · ${esc(w.jugador||'—')}`,rows,
+    `<button class="btn sm" style="background:var(--a4);color:#fff" onclick="closePreview();openWarnModal('${w.id}')">✏ Editar</button>
+     <button class="btn sm coral" onclick="closePreview();delRec('warns','${w.id}')">✕ Eliminar</button>`);
 };
 window.previewTicket=id=>{
   const t=DB.tickets.find(x=>x.id===id);if(!t)return;
@@ -1468,6 +1633,134 @@ window.previewTask=id=>{
   openPreview('📋',t.titulo||'Tarea',rows,
     `<button class="btn sm" onclick="closePreview();toggleTask('${t.id}',${!!t.done})">${t.done?'↩ Reabrir':'✓ Completar'}</button>
      <button class="btn sm coral" onclick="closePreview();delRec('tasks','${t.id}')">✕ Eliminar</button>`);
+};
+
+
+/* ══ WARN MODAL ══ */
+const TIPO_ICONS={warn:'⚠',mute:'🔇',kick:'👢',ban:'🔨'};
+
+window.updateWarnIcon=()=>{
+  // visual only
+};
+
+window.openWarnModal=(id=null)=>{
+  _wWarnImgs=[];
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('w-edit-id').value=id||'';
+  document.getElementById('w-tipo').value='warn';
+  document.getElementById('w-jugador').value='';
+  document.getElementById('w-severidad').value='alta';
+  document.getElementById('w-razon').value='';
+  document.getElementById('w-descripcion').value='';
+  document.getElementById('w-por').value=CU?.username||'';
+  document.getElementById('w-fecha').value=today;
+  document.getElementById('w-network').value='';
+  document.getElementById('w-thumb-img').src='';
+  document.getElementById('w-thumb-img').style.display='none';
+  document.getElementById('w-thumb-placeholder').style.display='';
+  document.getElementById('w-file-name').textContent='Sin archivo';
+  document.getElementById('w-extra-imgs').innerHTML='';
+  if(id){
+    const w=DB.warns.find(x=>x.id===id);
+    if(w){
+      document.getElementById('warn-ttl').textContent='Editar Sanción · Staff';
+      document.getElementById('w-tipo').value=w.tipo||'warn';
+      document.getElementById('w-jugador').value=w.jugador||w.jugador||'';
+      document.getElementById('w-severidad').value=w.severidad||'alta';
+      document.getElementById('w-razon').value=w.razon||w.motivo||'';
+      document.getElementById('w-descripcion').value=w.descripcion||w.desc||'';
+      document.getElementById('w-por').value=w.por||'';
+      document.getElementById('w-fecha').value=w.fecha||today;
+      document.getElementById('w-network').value=w.network||'';
+      // show existing images
+      const imgs=w.imagenes||[];
+      if(imgs.length){
+        document.getElementById('w-thumb-img').src=imgs[0];
+        document.getElementById('w-thumb-img').style.display='block';
+        document.getElementById('w-thumb-placeholder').style.display='none';
+        document.getElementById('w-file-name').textContent=`${imgs.length} imagen(es) guardada(s)`;
+        // show extra thumbs
+        document.getElementById('w-extra-imgs').innerHTML=imgs.map((url,i)=>`
+          <div class="img-thumb"><img src="${url}" onclick="openViewer(${JSON.stringify(imgs)},${i})"/>
+          <div class="img-badge">guardada</div></div>`).join('');
+      }
+    }
+  } else {
+    document.getElementById('warn-ttl').textContent='Nueva Sanción · Staff';
+  }
+  document.getElementById('ov-warn').classList.add('on');
+};
+
+window.closeWarnModal=()=>{
+  document.getElementById('ov-warn').classList.remove('on');
+  _wWarnImgs=[];
+};
+
+window.handleWarnImg=async(e)=>{
+  const files=Array.from(e.target.files);
+  for(const f of files){
+    if(f.size>5*1024*1024){showToast('Imagen demasiado grande (máx 5MB)',true);continue;}
+    const dataUrl=await fileToDataUrl(f);
+    _wWarnImgs.push({dataUrl,file:f});
+    // Show first in thumb
+    if(_wWarnImgs.length===1){
+      document.getElementById('w-thumb-img').src=dataUrl;
+      document.getElementById('w-thumb-img').style.display='block';
+      document.getElementById('w-thumb-placeholder').style.display='none';
+    }
+  }
+  document.getElementById('w-file-name').textContent=`${_wWarnImgs.length} imagen(es) lista(s)`;
+  // Show all pending in grid
+  const grid=document.getElementById('w-extra-imgs');
+  grid.innerHTML=_wWarnImgs.map((item,i)=>`
+    <div class="img-thumb" style="outline:2px dashed var(--a4);outline-offset:-2px">
+      <img src="${item.dataUrl}"/>
+      <div class="img-badge" style="background:rgba(181,87,255,.85);color:#fff">nueva</div>
+    </div>`).join('');
+  e.target.value='';
+};
+
+window.saveWarn=async()=>{
+  const jugador=document.getElementById('w-jugador').value.trim();
+  const razon=document.getElementById('w-razon').value.trim();
+  if(!jugador){showToast('El jugador/staff es requerido',true);return;}
+  if(!razon){showToast('La razón es requerida',true);return;}
+
+  const tipo=document.getElementById('w-tipo').value;
+  const severidad=document.getElementById('w-severidad').value;
+  const descripcion=document.getElementById('w-descripcion').value.trim();
+  const por=document.getElementById('w-por').value.trim()||CU?.username||'';
+  const fecha=document.getElementById('w-fecha').value;
+  const network=document.getElementById('w-network').value.trim();
+  const editId=document.getElementById('w-edit-id').value;
+
+  try{
+    // Upload images
+    let newUrls=[];
+    if(_wWarnImgs.length){
+      const CLOUD='dkrlj5qby';const PRESET='controleventify';
+      for(const {file} of _wWarnImgs){
+        const fd2=new FormData();fd2.append('file',file);fd2.append('upload_preset',PRESET);fd2.append('folder','panel/warns');
+        const r=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD+'/image/upload',{method:'POST',body:fd2});
+        const d=await r.json();if(d.secure_url)newUrls.push(d.secure_url);
+      }
+    }
+
+    const payload={tipo,severidad,jugador,razon,descripcion,por,fecha,network,updatedAt:serverTimestamp()};
+
+    if(editId){
+      const existing=DB.warns.find(x=>x.id===editId);
+      const allImgs=[...(existing?.imagenes||[]),...newUrls];
+      await updateDoc(doc(db,'warns',editId),{...payload,imagenes:allImgs});
+      showToast('Sanción actualizada ✓');
+    } else {
+      payload.imagenes=newUrls;
+      payload.createdAt=serverTimestamp();
+      await addDoc(collection(db,'warns'),payload);
+      showToast('Sanción registrada ✓');
+    }
+    closeWarnModal();
+  }catch(e){showToast('Error: '+e.message,true);}
 };
 
 /* ══ CANAL PRIVADO (solo Owners + SpaceLifi) ══ */
