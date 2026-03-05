@@ -202,6 +202,58 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
 .toast{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--bd);border-left:3px solid var(--a1);border-radius:10px;padding:12px 18px;font-size:13px;font-family:var(--mo);z-index:9999;transform:translateY(16px);opacity:0;transition:all .3s;pointer-events:none;max-width:320px}
 .toast.on{transform:translateY(0);opacity:1}
 .toast.err{border-left-color:var(--a3)}
+
+/* ── PREVIEW DRAWER ── */
+.preview-drawer{position:fixed;right:0;top:0;bottom:0;width:420px;max-width:95vw;background:var(--s1);border-left:1px solid var(--bd);z-index:700;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.preview-drawer.on{transform:translateX(0)}
+.preview-drawer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--a2),var(--a4),var(--a1))}
+.pd-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--bd);gap:12px}
+.pd-head h4{font-size:15px;font-weight:800;letter-spacing:-.3px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pd-close{background:transparent;border:1px solid var(--bd);border-radius:8px;color:var(--mu);font-size:16px;cursor:pointer;padding:4px 10px;transition:all .2s;line-height:1}
+.pd-close:hover{color:var(--a3);border-color:var(--a3)}
+.pd-body{flex:1;overflow-y:auto;padding:18px 20px}
+.pd-body::-webkit-scrollbar{width:4px}.pd-body::-webkit-scrollbar-track{background:transparent}.pd-body::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+.pd-row{display:flex;flex-direction:column;gap:3px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.pd-row:last-child{border-bottom:none}
+.pd-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--mu);font-family:var(--mo)}
+.pd-value{font-size:13px;color:var(--tx);line-height:1.5;word-break:break-word}
+.pd-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:7px;margin-top:8px}
+.pd-imgs img{width:100%;aspect-ratio:1;border-radius:7px;object-fit:cover;border:1px solid var(--bd);cursor:pointer;transition:transform .15s,border-color .15s}
+.pd-imgs img:hover{transform:scale(1.06);border-color:var(--a2)}
+.pd-actions{padding:14px 20px;border-top:1px solid var(--bd);display:flex;gap:8px}
+.pd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:699;opacity:0;pointer-events:none;transition:opacity .3s}
+.pd-overlay.on{opacity:1;pointer-events:all}
+tbody tr{cursor:pointer}
+
+/* ── PRIVATE CHAT ── */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:380px;background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.chat-msgs::-webkit-scrollbar{width:4px}.chat-msgs::-webkit-scrollbar-track{background:transparent}.chat-msgs::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+.chat-input-bar{padding:12px 14px;border-top:1px solid var(--bd);display:flex;gap:8px;align-items:center;background:var(--s2)}
+.chat-input-bar input{flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;color:var(--tx);font-family:var(--mo);font-size:13px;outline:none;transition:border-color .2s}
+.chat-input-bar input:focus{border-color:var(--a4)}
+.chat-bubble{display:flex;flex-direction:column;max-width:78%}
+.chat-bubble.me{align-self:flex-end;align-items:flex-end}
+.chat-bubble.them{align-self:flex-start;align-items:flex-start}
+.chat-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:10px;color:var(--mu);font-family:var(--mo)}
+.chat-av{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0}
+.chat-text{padding:9px 13px;border-radius:12px;font-size:13px;line-height:1.55;word-break:break-word}
+.chat-bubble.me .chat-text{background:rgba(181,87,255,.15);border:1px solid rgba(181,87,255,.25);border-bottom-right-radius:4px}
+.chat-bubble.them .chat-text{background:var(--s2);border:1px solid var(--bd);border-bottom-left-radius:4px}
+.chat-del{background:transparent;border:none;color:var(--mu);cursor:pointer;font-size:11px;padding:0 3px;transition:color .15s}
+.chat-del:hover{color:var(--a3)}
+
+/* ── TASK CATEGORY TABS ── */
+.task-cat-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;padding:2px}
+.task-ct{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:6px 14px;font-family:var(--fn);font-size:12px;font-weight:600;color:var(--mu);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.task-ct:hover{color:var(--tx)}
+.task-ct.on{border-color:rgba(181,87,255,.4);background:rgba(181,87,255,.08);color:var(--a4)}
+.task-ct .ct-cnt{background:var(--s2);border-radius:4px;font-size:10px;padding:1px 6px;font-family:var(--mo)}
+.task-ct.on .ct-cnt{background:rgba(181,87,255,.2);color:var(--a4)}
+
+/* ── EQUIPO CARD CLICK ── */
+.ecard{cursor:pointer;transition:border-color .2s,transform .15s}
+.ecard:hover{transform:translateY(-2px)}
 </style>
 </head>
 <body>
@@ -213,7 +265,7 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
     <h1>Panel<em>.</em></h1>
     <p>controleventify · acceso interno</p>
     <div class="lerr" id="lerr">Usuario o contraseña incorrectos</div>
-    <div class="lf"><label>Usuario</label><input id="lu" type="text" placeholder="gian / greto" autocomplete="username"/></div>
+    <div class="lf"><label>Usuario</label><input id="lu" type="text" placeholder="tu usuario de staff" autocomplete="username"/></div>
     <div class="lf"><label>Contraseña</label><input id="lp" type="password" placeholder="••••••" autocomplete="current-password"/></div>
     <button class="lbtn" onclick="doLogin()">Entrar →</button>
   </div>
@@ -228,6 +280,10 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
       <button class="tab"    onclick="go('warns',this)"><span class="dot"></span>Warns</button>
       <button class="tab"    onclick="go('tickets',this)"><span class="dot"></span>Tickets</button>
       <button class="tab"    onclick="go('tasks',this)"><span class="dot"></span>Tareas</button>
+      <button class="tab" id="tab-eventos" onclick="go('eventos',this)" style="display:none"><span class="dot"></span>Eventos</button>
+      <button class="tab" id="tab-ideas"   onclick="go('ideas',this)"   style="display:none"><span class="dot"></span>Ideas</button>
+      <button class="tab" id="tab-equipo"  onclick="go('equipo',this)"  style="display:none"><span class="dot"></span>Equipo</button>
+      <button class="tab" id="tab-canal"   onclick="go('canal',this)"   style="display:none"><span class="dot"></span>💜 Privado</button>
     </div>
     <div class="tb-r">
       <span class="live-dot">EN VIVO</span>
@@ -315,8 +371,8 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
     <!-- TAREAS -->
     <div class="panel" id="panel-tasks">
       <div class="ph">
-        <div><h2>Tareas <b>internas</b></h2><p>Solo para el equipo · gian & greto · tiempo real</p></div>
-        <button class="btn" onclick="openModal('tasks')">+ Nueva tarea</button>
+        <div><h2>Tareas <b>internas</b></h2><p>Solo para el equipo · tiempo real</p></div>
+        <button class="btn task-only" onclick="openModal('tasks')">+ Nueva tarea</button>
       </div>
       <div class="stats">
         <div class="sc"><div class="sc-l">Total</div><div class="sc-v c1" id="ta-t">—</div></div>
@@ -324,15 +380,124 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
         <div class="sc"><div class="sc-l">Completadas</div><div class="sc-v c1" id="ta-d">—</div></div>
         <div class="sc"><div class="sc-l">Alta prioridad</div><div class="sc-v c3" id="ta-h">—</div></div>
       </div>
-      <div class="tf">
-        <button class="flt on" onclick="setTF('all',this)">Todas</button>
-        <button class="flt"    onclick="setTF('pending',this)">Pendientes</button>
-        <button class="flt"    onclick="setTF('done',this)">Completadas</button>
-        <button class="flt"    onclick="setTF('alta',this)">Alta prioridad</button>
+      <div class="task-cat-tabs" id="task-cats">
+        <button class="task-ct on" onclick="setTF('all',this)" data-f="all">Todas <span class="ct-cnt" id="cnt-all">0</span></button>
+        <button class="task-ct" onclick="setTF('Survival',this)" data-f="Survival">🌿 Survival <span class="ct-cnt" id="cnt-Survival">0</span></button>
+        <button class="task-ct" onclick="setTF('Events',this)" data-f="Events">🎉 Events <span class="ct-cnt" id="cnt-Events">0</span></button>
+        <button class="task-ct" onclick="setTF('Staff',this)" data-f="Staff">🛡 Staff <span class="ct-cnt" id="cnt-Staff">0</span></button>
+        <button class="task-ct" onclick="setTF('Const.',this)" data-f="Const.">🏗 Const. <span class="ct-cnt" id="cnt-Const.">0</span></button>
+        <button class="task-ct" onclick="setTF('Admin',this)" data-f="Admin">⚙ Admin <span class="ct-cnt" id="cnt-Admin">0</span></button>
+        <button class="task-ct" onclick="setTF('pending',this)" data-f="pending">⏳ Pendientes <span class="ct-cnt" id="cnt-pending">0</span></button>
+        <button class="task-ct" onclick="setTF('done',this)" data-f="done">✅ Completadas <span class="ct-cnt" id="cnt-done">0</span></button>
+        <button class="task-ct" onclick="setTF('alta',this)" data-f="alta">🔴 Alta prioridad <span class="ct-cnt" id="cnt-alta">0</span></button>
       </div>
       <div id="task-cards"></div>
     </div>
 
+
+    <!-- EVENTOS / HORARIOS -->
+    <div class="panel" id="panel-eventos">
+      <div class="ph">
+        <div><h2>Horarios <b>/ Eventos</b></h2><p>Próximos eventos del servidor · tiempo real</p></div>
+        <button class="btn owner-only" onclick="openModalEv()">+ Agregar evento</button>
+      </div>
+      <div id="eventos-list"></div>
+    </div>
+
+    <!-- IDEAS -->
+    <div class="panel" id="panel-ideas">
+      <div class="ph">
+        <div><h2>Ideas <b>/ Propuestas</b></h2><p>Ideas de eventos propuestas por el staff</p></div>
+        <button class="btn sky" onclick="openModalIdea()">+ Nueva idea</button>
+      </div>
+      <div id="ideas-list"></div>
+    </div>
+
+    <!-- EQUIPO -->
+    <div class="panel" id="panel-equipo">
+      <div class="ph">
+        <div><h2>Equipo <b>/ Staff</b></h2><p>Los 15 miembros del equipo Eventify</p></div>
+      </div>
+      <div id="equipo-list"></div>
+    </div>
+
+<!-- CANAL PRIVADO OWNERS -->
+    <div class="panel" id="panel-canal">
+      <div class="ph">
+        <div><h2>Canal <b>Privado</b></h2><p>Solo para Owners + SpaceLifi · comunicación interna</p></div>
+      </div>
+      <div id="canal-wrap"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PREVIEW OVERLAY -->
+<div class="pd-overlay" id="pd-overlay" onclick="closePreview()"></div>
+
+<!-- PREVIEW DRAWER -->
+<div class="preview-drawer" id="preview-drawer">
+  <div class="pd-head">
+    <span id="pd-icon" style="font-size:20px;flex-shrink:0"></span>
+    <h4 id="pd-title">Vista previa</h4>
+    <button class="pd-close" onclick="closePreview()">✕</button>
+  </div>
+  <div class="pd-body" id="pd-body"></div>
+  <div class="pd-actions" id="pd-actions"></div>
+</div>
+
+<!-- MODAL EVENTO -->
+<div class="ov" id="ov-ev" onclick="if(event.target===this)closeModalEv()">
+  <div class="modal">
+    <button class="mc" onclick="closeModalEv()">×</button>
+    <h3 id="ev-ttl">Nuevo Evento</h3>
+    <div class="mr">
+      <div class="mf"><label>Nombre *</label><input id="ev-nombre" placeholder="Nombre del evento"/></div>
+      <div class="mf"><label>Tipo</label><select id="ev-tipo">
+        <option value="reunion">🗣 Reunión Staff</option>
+        <option value="beta">🧪 BetaTest</option>
+        <option value="evento">🎉 Evento</option>
+        <option value="mainevent">⭐ Main Event</option>
+        <option value="streamer">🎥 Evento Streamer</option>
+        <option value="collab">🤝 Colaboración</option>
+        <option value="maint">🔧 Mantenimiento</option>
+      </select></div>
+    </div>
+    <div class="mr">
+      <div class="mf"><label>Fecha *</label><input id="ev-fecha" type="date"/></div>
+      <div class="mf"><label>Hora</label><input id="ev-hora" type="time"/></div>
+    </div>
+    <div class="mf"><label>Link</label><input id="ev-link" placeholder="https://..."/></div>
+    <div class="mf"><label>Descripción</label><textarea id="ev-desc" placeholder="Detalles del evento..."></textarea></div>
+    <input type="hidden" id="ev-id"/>
+    <div class="mbtns">
+      <button class="btn-g" onclick="closeModalEv()">Cancelar</button>
+      <button class="btn sky" onclick="saveEvento()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IDEA -->
+<div class="ov" id="ov-idea" onclick="if(event.target===this)closeModalIdea()">
+  <div class="modal">
+    <button class="mc" onclick="closeModalIdea()">×</button>
+    <h3>💡 Nueva Idea de Evento</h3>
+    <div class="mf"><label>Título *</label><input id="idea-titulo" placeholder="Nombre del evento propuesto"/></div>
+    <div class="mf"><label>Descripción / Concepto</label><textarea id="idea-desc" placeholder="Mecánicas, objetivos, recompensas..."></textarea></div>
+    <div class="mf">
+      <label>🖼 Imágenes de referencia</label>
+      <div class="img-upload-area" id="idea-drop-zone" onclick="document.getElementById('idea-img-input').click()">
+        <input type="file" id="idea-img-input" accept="image/*" multiple style="display:none" onchange="handleIdeaImgs(event)"/>
+        <div class="up-icon">+</div>
+        <p style="font-size:12px">Agregar imágenes</p>
+      </div>
+      <div class="img-preview-grid" id="idea-img-preview"></div>
+    </div>
+    <div class="mf"><label>Links de referencia (uno por línea)</label><textarea id="idea-links" placeholder="https://ejemplo.com/referencia" style="min-height:60px"></textarea></div>
+    <div class="mbtns">
+      <button class="btn-g" onclick="closeModalIdea()">Cancelar</button>
+      <button class="btn sky" onclick="saveIdea()">Publicar</button>
+    </div>
   </div>
 </div>
 
@@ -399,17 +564,37 @@ const fbApp  = initializeApp(firebaseConfig);
 const db     = getFirestore(fbApp);
 
 
+/* ── STAFF ACCOUNTS ── */
+const STAFF = [
+  {id:1, username:"Gian",             password:"r2DvYx?+7*w2jV2v!M30DDe", role:"Owner",        tier:"owner",        color:"#f59e0b", grad:"linear-gradient(135deg,#f59e0b,#fcd34d)", av:"GI"},
+  {id:2, username:"Leen",             password:"TEd52rL#b~-ZV94dm=Y8Wnt", role:"Owner",        tier:"owner",        color:"#f59e0b", grad:"linear-gradient(135deg,#d97706,#fbbf24)", av:"LE"},
+  {id:3, username:"QuitsChain",       password:"g719f6n3#KqbhPX~p^7^TGq", role:"Moderador",    tier:"mod",          color:"#34d399", grad:"linear-gradient(135deg,#059669,#34d399)", av:"QC"},
+  {id:4, username:"xAntoony_",        password:"gy9ThTXd9Nqzg0#Z+5uT?*9", role:"Moderador",    tier:"mod",          color:"#34d399", grad:"linear-gradient(135deg,#6366f1,#a78bfa)", av:"XA"},
+  {id:5, username:"Milaw",            password:"UY18E#De=DT3YMe^n52?yjn",  role:"Moderador",    tier:"mod",          color:"#34d399", grad:"linear-gradient(135deg,#059669,#34d399)", av:"MI"},
+  {id:6, username:"MiniGerald",       password:"2R93#1!81Njy!KI0uFyjpL&",  role:"Admin",        tier:"admin",        color:"#818cf8", grad:"linear-gradient(135deg,#10b981,#6ee7b7)", av:"MG"},
+  {id:7, username:"Yumi_HLA",         password:"BTJzPE1M$3$k~H&gad6W15F",  role:"Moderador",    tier:"mod",          color:"#34d399", grad:"linear-gradient(135deg,#059669,#a7f3d0)", av:"YH"},
+  {id:8, username:"Mundy",            password:"S4M2^-9GCS=sy565D=rvL4x",  role:"Moderador",    tier:"mod",          color:"#34d399", grad:"linear-gradient(135deg,#047857,#34d399)", av:"MU"},
+  {id:9, username:"SirJarvis",        password:"0&a#RP3T&+jWpp5Nq73cd2F",  role:"Helper",       tier:"helper",       color:"#67e8f9", grad:"linear-gradient(135deg,#0891b2,#67e8f9)", av:"SJ"},
+  {id:10,username:"Sharith",          password:"xVZ?r@Ub63Lj0!!EAs65u1E",  role:"Helper",       tier:"helper",       color:"#67e8f9", grad:"linear-gradient(135deg,#06b6d4,#a5f3fc)", av:"SH"},
+  {id:11,username:"SpaceLifi",        password:"8cMJn*AK@+0s2h5l1hQYML*",  role:"Helper",       tier:"helper",       color:"#67e8f9", grad:"linear-gradient(135deg,#0e7490,#67e8f9)", av:"SL"},
+  {id:12,username:"KattyVtuber",      password:"&mH*5KnH5+EG5Zgp0~91v1G",  role:"Helper",       tier:"helper",       color:"#67e8f9", grad:"linear-gradient(135deg,#0891b2,#bae6fd)", av:"KV"},
+  {id:13,username:"Greto",            password:"q4ZcKzVS$Qe0=R7*-aMtT94",  role:"Configurador", tier:"config",       color:"#f472b6", grad:"linear-gradient(135deg,#be185d,#f472b6)", av:"GR"},
+  {id:14,username:"vs_103",           password:"uYTa1-653m-+z?7GlVwSHZ5",  role:"Configurador", tier:"config",       color:"#f472b6", grad:"linear-gradient(135deg,#db2777,#f9a8d4)", av:"VS"},
+  {id:15,username:"solamentealesita", password:"yrprX*5f#8Y~QVpa0!9MU5Y",  role:"Configuradora",tier:"config",       color:"#f472b6", grad:"linear-gradient(135deg,#be185d,#fda4af)", av:"SA"},
+];
+
 /* ── AUTH ── */
-const CREDS = { gian:'123', greto:'123' };
-let CU = sessionStorage.getItem('cu');
-if (CU && CREDS[CU]) initApp();
+let CU = null;
+try{ const raw=sessionStorage.getItem('efy_cu'); CU=raw?JSON.parse(raw):null; }catch{}
+if(CU) initApp();
 
 window.doLogin = () => {
-  const u = document.getElementById('lu').value.trim().toLowerCase();
+  const u = document.getElementById('lu').value.trim();
   const p = document.getElementById('lp').value;
   document.getElementById('lerr').classList.remove('on');
-  if (CREDS[u] && CREDS[u] === p) {
-    CU = u; sessionStorage.setItem('cu', u);
+  const acc = STAFF.find(a => a.username.toLowerCase()===u.toLowerCase() && a.password===p);
+  if (acc) {
+    CU = acc; sessionStorage.setItem('efy_cu', JSON.stringify(acc));
     document.getElementById('login').classList.add('out');
     setTimeout(initApp, 380);
   } else {
@@ -419,18 +604,46 @@ window.doLogin = () => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !document.getElementById('login').classList.contains('out')) window.doLogin();
 });
-window.doLogout = () => { sessionStorage.removeItem('cu'); location.reload(); };
+window.doLogout = () => { sessionStorage.removeItem('efy_cu'); location.reload(); };
 
 /* ── DB & REAL-TIME LISTENERS ── */
-const DB = { users:[], warns:[], tickets:[], tasks:[] };
+const DB = { users:[], warns:[], tickets:[], tasks:[], eventos:[], ideas:[], canal:[] };
 let TF = 'all';
 const unsubs = [];
 
 function initApp() {
   document.getElementById('app').classList.add('on');
-  document.getElementById('unm').textContent = CU.charAt(0).toUpperCase() + CU.slice(1);
-  document.getElementById('uav').textContent = CU.charAt(0).toUpperCase();
+  document.getElementById('unm').textContent = CU.username || CU;
+  document.getElementById('uav').textContent = CU.av || (typeof CU==='string'?CU[0].toUpperCase():CU.username[0].toUpperCase());
+  if(CU.grad) document.getElementById('uav').style.background = CU.grad;
+  // Permisos por tier
+  const IS_OWN      = CU.tier==='owner';
+  const IS_ADM      = IS_OWN || CU.tier==='admin';
+  const IS_CONFIG   = CU.tier==='config';
+  const IS_SPACELIFI= CU.username==='SpaceLifi';
+  // Tareas: solo Admin/Owner y SpaceLifi Helper
+  const CAN_TASK    = IS_ADM || IS_SPACELIFI;
+  window._P = {IS_OWN, IS_ADM, CAN_TASK, IS_CONFIG, IS_SPACELIFI};
+  if(!IS_OWN) document.querySelectorAll('.owner-only').forEach(el=>el.style.display='none');
+  if(!CAN_TASK) document.querySelectorAll('.task-only').forEach(el=>el.style.display='none');
+  // Populate "Asignado a" con todos los staff
+  ['f-asignado','f-asignado-t'].forEach(id=>{
+    const sel = document.getElementById(id);
+    if(!sel) return;
+    sel.innerHTML = '<option value="">Sin asignar</option>' + STAFF.map(s=>`<option value="${s.username}">${s.username} (${s.role})</option>`).join('');
+  });
   startListeners();
+  // Ideas y Equipo: todo el staff puede verlos
+  document.getElementById('tab-equipo').style.display='';
+  document.getElementById('tab-ideas').style.display='';
+  // Eventos: solo Admin/Owner
+  if(IS_OWN || IS_ADM) {
+    document.getElementById('tab-eventos').style.display='';
+  }
+  // Canal: Owners + Configuradores + SpaceLifi
+  if(IS_OWN || IS_CONFIG || IS_SPACELIFI) {
+    document.getElementById('tab-canal').style.display='';
+  }
 }
 
 function startListeners() {
@@ -438,13 +651,12 @@ function startListeners() {
   unsubs.forEach(u => u());
   unsubs.length = 0;
 
-  const cols = ['users','warns','tickets','tasks'];
+  const cols = ['users','warns','tickets','tasks','eventos','ideas','canal'];
   cols.forEach(col => {
     const q = query(collection(db, col), orderBy('createdAt','desc'));
     const unsub = onSnapshot(q, snap => {
-      const prev = DB[col].map(x=>x.id);
+      const prev = (DB[col]||[]).map(x=>x.id);
       DB[col] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      // Detect new docs to flash
       const newIds = DB[col].map(x=>x.id).filter(id => !prev.includes(id));
       renderAll(newIds, col);
     }, err => {
@@ -468,6 +680,10 @@ function renderAll(newIds=[], col='') {
   renderWarns(col==='warns'?newIds:[]);
   renderTickets(col==='tickets'?newIds:[]);
   renderTasks();
+  if(document.getElementById('panel-eventos')?.classList.contains('on')) renderEventos();
+  if(document.getElementById('panel-ideas')?.classList.contains('on')) renderIdeas();
+  if(document.getElementById('panel-canal')?.classList.contains('on')) renderCanal();
+  if(document.getElementById('panel-equipo')?.classList.contains('on')) renderEquipo();
 }
 
 /* ── IMAGE STACK HELPER ── */
@@ -492,14 +708,14 @@ window.renderUsers = (newIds=[]) => {
   document.getElementById('u-s').textContent = DB.users.filter(u=>u.rol==='admin'||u.rol==='mod').length;
   const tb = document.getElementById('u-tb');
   if (!rows.length) { tb.innerHTML = eRow(8,'Sin jugadores registrados'); return; }
-  tb.innerHTML = rows.map(u=>`<tr class="${newIds.includes(u.id)?'rt-new':''}">
+  tb.innerHTML = rows.map(u=>`<tr class="${newIds.includes(u.id)?'rt-new':''}" onclick="previewUser('${u.id}')">
     <td><b>${esc(u.nombre||'—')}</b></td>
     <td>${rolB(u.rol)}</td><td>${estB(u.estado)}</td>
     <td class="cd">${esc(u.discord||'—')}</td>
     <td style="max-width:160px">${esc(u.notas||'—')}</td>
     <td>${imgStack(u.imagenes,'users',u.id)}</td>
     <td class="cd">${fd(u.createdAt)}</td>
-    <td><div class="ra">
+    <td><div class="ra" onclick="event.stopPropagation()">
       <button class="ia" onclick="editRec('users','${u.id}')">✏</button>
       <button class="ia img-btn" onclick="openImgUpload('users','${u.id}')">🖼</button>
       <button class="ia del" onclick="delRec('users','${u.id}')">✕</button>
@@ -520,14 +736,14 @@ window.renderWarns = (newIds=[]) => {
   }).length;
   const tb = document.getElementById('w-tb');
   if (!rows.length) { tb.innerHTML = eRow(7,'Sin sanciones registradas'); return; }
-  tb.innerHTML = rows.map(w=>`<tr class="${newIds.includes(w.id)?'rt-new':''}">
+  tb.innerHTML = rows.map(w=>`<tr class="${newIds.includes(w.id)?'rt-new':''}" onclick="previewWarn('${w.id}')">
     <td><b>${esc(w.jugador||'—')}</b></td>
     <td>${tipoB(w.tipo)}</td>
     <td style="max-width:200px">${esc(w.motivo||'—')}</td>
     <td>${esc(w.por||'—')}</td>
     <td>${imgStack(w.imagenes,'warns',w.id)}</td>
     <td class="cd">${fd(w.createdAt)}</td>
-    <td><div class="ra">
+    <td><div class="ra" onclick="event.stopPropagation()">
       <button class="ia img-btn" onclick="openImgUpload('warns','${w.id}')">🖼</button>
       <button class="ia del" onclick="delRec('warns','${w.id}')">✕</button>
     </div></td></tr>`).join('');
@@ -544,7 +760,7 @@ window.renderTickets = (newIds=[]) => {
   document.getElementById('t-c').textContent = DB.tickets.filter(t=>t.estado==='cerrado').length;
   const tb = document.getElementById('t-tb');
   if (!rows.length) { tb.innerHTML = eRow(8,'Sin tickets'); return; }
-  tb.innerHTML = rows.map(t=>`<tr class="${newIds.includes(t.id)?'rt-new':''}">
+  tb.innerHTML = rows.map(t=>`<tr class="${newIds.includes(t.id)?'rt-new':''}" onclick="previewTicket('${t.id}')">
     <td><b>${esc(t.asunto||'—')}</b></td>
     <td>${esc(t.jugador||'—')}</td>
     <td>${catB(t.categoria)}</td>
@@ -552,7 +768,7 @@ window.renderTickets = (newIds=[]) => {
     <td>${esc(t.asignado||'—')}</td>
     <td>${imgStack(t.imagenes,'tickets',t.id)}</td>
     <td class="cd">${fd(t.createdAt)}</td>
-    <td><div class="ra">
+    <td><div class="ra" onclick="event.stopPropagation()">
       <button class="ia" onclick="editRec('tickets','${t.id}')">✏</button>
       <button class="ia img-btn" onclick="openImgUpload('tickets','${t.id}')">🖼</button>
       <button class="ia del" onclick="delRec('tickets','${t.id}')">✕</button>
@@ -562,35 +778,55 @@ window.renderTickets = (newIds=[]) => {
 /* ── RENDER TASKS ── */
 window.setTF = (f,btn) => {
   TF=f;
-  document.querySelectorAll('.flt').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.task-ct').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   renderTasks();
 };
 window.renderTasks = () => {
-  let rows=[...DB.tasks];
+  const CATS=['Survival','Events','Staff','Const.','Admin'];
+  const allT=DB.tasks;
+  // Update counts
+  document.getElementById('ta-t').textContent=allT.length;
+  document.getElementById('ta-p').textContent=allT.filter(t=>!t.done).length;
+  document.getElementById('ta-d').textContent=allT.filter(t=>t.done).length;
+  document.getElementById('ta-h').textContent=allT.filter(t=>t.prioridad==='alta').length;
+  document.getElementById('cnt-all').textContent=allT.length;
+  document.getElementById('cnt-pending').textContent=allT.filter(t=>!t.done).length;
+  document.getElementById('cnt-done').textContent=allT.filter(t=>t.done).length;
+  document.getElementById('cnt-alta').textContent=allT.filter(t=>t.prioridad==='alta').length;
+  CATS.forEach(cat=>{
+    const el=document.getElementById('cnt-'+cat);
+    if(el) el.textContent=allT.filter(t=>t.categoria===cat).length;
+  });
+  let rows=[...allT];
   if(TF==='pending') rows=rows.filter(t=>!t.done);
-  if(TF==='done')    rows=rows.filter(t=>t.done);
-  if(TF==='alta')    rows=rows.filter(t=>t.prioridad==='alta');
-  document.getElementById('ta-t').textContent=DB.tasks.length;
-  document.getElementById('ta-p').textContent=DB.tasks.filter(t=>!t.done).length;
-  document.getElementById('ta-d').textContent=DB.tasks.filter(t=>t.done).length;
-  document.getElementById('ta-h').textContent=DB.tasks.filter(t=>t.prioridad==='alta').length;
+  else if(TF==='done') rows=rows.filter(t=>t.done);
+  else if(TF==='alta') rows=rows.filter(t=>t.prioridad==='alta');
+  else if(TF!=='all') rows=rows.filter(t=>t.categoria===TF);
   const c=document.getElementById('task-cards');
-  if(!rows.length){c.innerHTML=`<div class="empty"><div class="empty-i">📋</div><p>Sin tareas — crea una con el botón de arriba</p></div>`;return;}
+  if(!rows.length){c.innerHTML=`<div class="empty"><div class="empty-i">📋</div><p>Sin tareas en esta categoría</p></div>`;return;}
+  const catColors={'Survival':'#34d399','Events':'#f59e0b','Staff':'#818cf8','Const.':'#f472b6','Admin':'#67e8f9'};
   c.innerHTML=rows.map(t=>`
-    <div class="tc ${t.done?'done':''}">
-      <div class="chk ${t.done?'on':''}" onclick="toggleTask('${t.id}',${!!t.done})">${t.done?'✓':''}</div>
-      <div class="tb2">
-        <div class="tt2">${esc(t.titulo||'Sin título')}</div>
-        <div class="tm">
-          ${t.nota?`<span class="tnote">${esc(t.nota)}</span>`:''}
-          ${prioB(t.prioridad)}
-          <span class="twho">→ ${esc(t.asignado||'—')}</span>
-          <button class="ia img-btn" style="padding:2px 8px;font-size:10px" onclick="openImgUpload('tasks','${t.id}')">🖼 Fotos</button>
+    <div class="tc ${t.done?'done':''}" onclick="previewTask('${t.id}')" style="position:relative">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:${catColors[t.categoria]||'var(--bd)'};border-radius:4px 0 0 4px"></div>
+      <div style="padding-left:8px;display:flex;align-items:flex-start;gap:12px;width:100%">
+        <div class="chk ${t.done?'on':''}" onclick="event.stopPropagation();toggleTask('${t.id}',${!!t.done})">${t.done?'✓':''}</div>
+        <div class="tb2">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            ${t.categoria?`<span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:${catColors[t.categoria]||'var(--mu)'};background:${catColors[t.categoria]||'var(--mu)'}18;border-radius:4px;padding:2px 7px;font-family:var(--mo)">${t.categoria}</span>`:''}
+          </div>
+          <div class="tt2">${esc(t.titulo||'Sin título')}</div>
+          <div class="tm">
+            ${t.nota?`<span class="tnote">${esc(t.nota.slice(0,60))}${t.nota.length>60?'…':''}</span>`:''}
+            ${prioB(t.prioridad)}
+            ${t.deadline?`<span style="font-size:10px;color:var(--mu);font-family:var(--mo)">📅 ${t.deadline}</span>`:''}
+            <span class="twho">→ ${esc(t.asignado||'—')}</span>
+            <button class="ia img-btn" style="padding:2px 8px;font-size:10px" onclick="event.stopPropagation();openImgUpload('tasks','${t.id}')">🖼</button>
+          </div>
+          ${t.imagenes&&t.imagenes.length?`<div class="tc-imgs">${t.imagenes.map((url,i)=>`<img src="${url}" onclick="event.stopPropagation();openViewer(${JSON.stringify(t.imagenes)},${i})"/>`).join('')}</div>`:''}
         </div>
-        ${t.imagenes && t.imagenes.length ? `<div class="tc-imgs">${t.imagenes.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(t.imagenes)},${i})" title="Ver imagen"/>`).join('')}</div>` : ''}
+        <button class="tdel" onclick="event.stopPropagation();delRec('tasks','${t.id}')">✕</button>
       </div>
-      <button class="tdel" onclick="delRec('tasks','${t.id}')">✕</button>
     </div>`).join('');
 };
 
@@ -647,19 +883,29 @@ const FORMS={
       <option value="cerrado">Cerrado</option>
     </select></div>
     <div class="mf"><label>Asignado a</label><select id="f-asignado">
-      <option value="">Sin asignar</option><option value="Gian">Gian</option><option value="Greto">Greto</option>
+      <option value="">Sin asignar</option>
     </select></div>
   </div>
   <div class="mf"><label>Descripción</label><textarea id="f-descripcion"></textarea></div>`,
 
   tasks:`<div class="mf"><label>Título *</label><input id="f-titulo" placeholder="Qué hay que hacer…"/></div>
   <div class="mr">
+    <div class="mf"><label>Categoría</label><select id="f-categoria">
+      <option value="Survival">🌿 Survival</option>
+      <option value="Events">🎉 Events</option>
+      <option value="Staff">🛡 Staff</option>
+      <option value="Const.">🏗 Const.</option>
+      <option value="Admin">⚙ Admin</option>
+    </select></div>
     <div class="mf"><label>Prioridad</label><select id="f-prioridad">
       <option value="baja">Baja</option><option value="media" selected>Media</option><option value="alta">Alta</option>
     </select></div>
+  </div>
+  <div class="mr">
     <div class="mf"><label>Asignado a</label><select id="f-asignado">
       <option value="Gian">Gian</option><option value="Greto">Greto</option><option value="Ambos">Ambos</option>
     </select></div>
+    <div class="mf"><label>Fecha límite</label><input id="f-deadline" type="date"/></div>
   </div>
   <div class="mf"><label>Nota</label><textarea id="f-nota"></textarea></div>`
 };
@@ -834,14 +1080,20 @@ window.openImgUpload = (res, id) => {
 window.saveRec = async () => {
   const body={};
   document.querySelectorAll('#m-body [id^="f-"]').forEach(el=>{body[el.id.replace('f-','')]=el.value.trim();});
-  if(_id && !document.querySelector('#m-body input')) {
-    // Quick image-only save
-    const newUrls = await uploadPendingImgs(_id);
-    const allUrls = [..._existingImgs, ...newUrls];
-    await updateDoc(doc(db,_res,_id),{imagenes: allUrls, updatedAt:serverTimestamp()});
-    showToast('Imágenes guardadas ✓');
-    closeModal(); return;
+
+  // Detect if this is an image-only modal (no form fields present)
+  const isImgOnly = !document.querySelector('#m-body [id^="f-"]');
+  if(isImgOnly && _id) {
+    try {
+      const newUrls = await uploadPendingImgs(_id);
+      const allUrls = [..._existingImgs, ...newUrls];
+      await updateDoc(doc(db,_res,_id),{imagenes: allUrls, updatedAt:serverTimestamp()});
+      showToast('Imágenes guardadas ✓');
+      closeModal();
+    } catch(e){ showToast('Error: '+e.message,true); }
+    return;
   }
+
   if(!body[REQ[_res]]){showToast('El campo requerido está vacío',true);return;}
   try{
     if(_id){
@@ -898,6 +1150,9 @@ document.addEventListener('keydown', e => {
   if(e.key==='ArrowRight') viewerNav(1);
   if(e.key==='Escape') closeViewer({target:document.getElementById('img-viewer')});
 });
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape' && document.getElementById('preview-drawer').classList.contains('on')) closePreview();
+});
 
 /* ── HELPERS ── */
 const rolB  = r=>{const m={admin:'bg4',mod:'bg3',vip:'bg2',jugador:'bg0'};return`<span class="bg ${m[r]||'bg0'}">${r||'—'}</span>`;};
@@ -916,6 +1171,375 @@ window.showToast = (msg,err=false)=>{
   t.textContent=msg; t.className='toast on'+(err?' err':'');
   clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('on'),3200);
 };
+
+/* ══ EVENTOS / HORARIOS ══ */
+const EV_TIPOS={reunion:{ic:'🗣',lbl:'Reunión Staff',col:'#818cf8'},beta:{ic:'🧪',lbl:'BetaTest',col:'#a855f7'},evento:{ic:'🎉',lbl:'Evento',col:'#f59e0b'},mainevent:{ic:'⭐',lbl:'Main Event',col:'#f43f5e'},streamer:{ic:'🎥',lbl:'Streamer',col:'#ec4899'},collab:{ic:'🤝',lbl:'Colaboración',col:'#06b6d4'},maint:{ic:'🔧',lbl:'Mantenimiento',col:'#9b91c2'}};
+
+function evStatus(e){
+  const now=new Date();const dt=new Date((e.fecha||'')+' '+(e.hora||'00:00'));const diff=(dt-now)/3600000;
+  if(diff<-3)return{cls:'bg0',l:'Finalizado'};
+  if(diff<0)return{cls:'bg3',l:'🔴 EN VIVO'};
+  if(diff<2)return{cls:'bg2',l:'🟡 Muy pronto'};
+  return{cls:'bg1',l:'Próximo'};
+}
+
+window.renderEventos=()=>{
+  const list=DB.eventos||[];
+  if(!list.length){document.getElementById('eventos-list').innerHTML='<div class="empty"><div class="empty-i">📅</div><p>Sin eventos programados</p></div>';return;}
+  const now=new Date();
+  const upcoming=list.filter(e=>new Date((e.fecha||'')+' '+(e.hora||'23:59'))>=now).slice().reverse();
+  const past=list.filter(e=>new Date((e.fecha||'')+' '+(e.hora||'23:59'))<now);
+  let html='';
+  if(upcoming.length){
+    html+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mu);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bd)">Próximos</div>';
+    html+=upcoming.map(evCard).join('');
+  }
+  if(past.length){
+    html+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mu);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--bd)">Historial</div>';
+    html+=past.map(evCard).join('');
+  }
+  document.getElementById('eventos-list').innerHTML=html;
+};
+
+function evCard(e){
+  const tp=EV_TIPOS[e.tipo]||EV_TIPOS.evento;const st=evStatus(e);
+  const dt=new Date(e.fecha||'');
+  const canDel=window._P?.IS_OWN;
+  return`<div class="tc" style="margin-bottom:10px">
+    <div style="width:4px;background:${tp.col};border-radius:4px;flex-shrink:0;align-self:stretch;margin-right:12px"></div>
+    <div class="tb2" style="flex:1">
+      <div class="tt2">${tp.ic} ${esc(e.nombre||'')}</div>
+      <div class="tm">
+        <span class="bg bg1">${tp.lbl}</span>
+        <span class="bg ${st.cls}">${st.l}</span>
+        ${e.hora?`<span style="font-size:11px;color:var(--mu);font-family:var(--mo)">🕐 ${e.hora}</span>`:''}
+        ${e.link?`<a href="${esc(e.link)}" target="_blank" style="font-size:11px;color:var(--a2);font-family:var(--mo)">🔗 Link</a>`:''}
+      </div>
+      ${e.desc?`<div style="font-size:12px;color:var(--mu);margin-top:5px">${esc(e.desc)}</div>`:''}
+      <div style="font-size:10px;color:var(--mu);font-family:var(--mo);margin-top:6px">📅 ${dt.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
+    </div>
+    ${canDel?`<div style="display:flex;gap:4px;flex-shrink:0">
+      <button class="ia" onclick="editEvento('${e.id}')">✏</button>
+      <button class="ia del" onclick="delEvento('${e.id}')">✕</button>
+    </div>`:''}
+  </div>`;
+}
+
+window.openModalEv=()=>{
+  document.getElementById('ev-id').value='';
+  document.getElementById('ev-ttl').textContent='Nuevo Evento';
+  ['ev-nombre','ev-link','ev-desc','ev-hora'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ev-fecha').value='';
+  document.getElementById('ev-tipo').value='evento';
+  document.getElementById('ov-ev').classList.add('on');
+};
+window.closeModalEv=()=>document.getElementById('ov-ev').classList.remove('on');
+window.editEvento=id=>{
+  const e=DB.eventos.find(x=>x.id===id);if(!e)return;
+  document.getElementById('ev-id').value=id;
+  document.getElementById('ev-ttl').textContent='Editar Evento';
+  document.getElementById('ev-nombre').value=e.nombre||'';
+  document.getElementById('ev-tipo').value=e.tipo||'evento';
+  document.getElementById('ev-fecha').value=e.fecha||'';
+  document.getElementById('ev-hora').value=e.hora||'';
+  document.getElementById('ev-link').value=e.link||'';
+  document.getElementById('ev-desc').value=e.desc||'';
+  document.getElementById('ov-ev').classList.add('on');
+};
+window.saveEvento=async()=>{
+  const nombre=document.getElementById('ev-nombre').value.trim();
+  const fecha=document.getElementById('ev-fecha').value;
+  if(!nombre||!fecha){showToast('Nombre y fecha requeridos',true);return;}
+  const id=document.getElementById('ev-id').value;
+  const entry={nombre,tipo:document.getElementById('ev-tipo').value,fecha,
+    hora:document.getElementById('ev-hora').value,link:document.getElementById('ev-link').value.trim(),
+    desc:document.getElementById('ev-desc').value.trim(),by:CU.username||CU};
+  try{
+    if(id) await updateDoc(doc(db,'eventos',id),{...entry,updatedAt:serverTimestamp()});
+    else await addDoc(collection(db,'eventos'),{...entry,createdAt:serverTimestamp()});
+    closeModalEv();showToast('Evento guardado ✓');
+  }catch(e){showToast('Error: '+e.message,true);}
+};
+window.delEvento=async id=>{
+  if(!confirm('¿Eliminar este evento?'))return;
+  try{await deleteDoc(doc(db,'eventos',id));showToast('Eliminado');}catch(e){showToast(e.message,true);}
+};
+
+/* ══ IDEAS ══ */
+let _ideaImgs = []; // pending idea images {dataUrl, file}
+window.handleIdeaImgs = async (e) => {
+  const files = Array.from(e.target.files);
+  for(const f of files){
+    if(f.size > 5*1024*1024){ showToast('Imagen demasiado grande (máx 5 MB)',true); continue; }
+    const dataUrl = await fileToDataUrl(f);
+    _ideaImgs.push({dataUrl, file:f});
+  }
+  refreshIdeaImgPreview();
+  e.target.value='';
+};
+function refreshIdeaImgPreview(){
+  const grid=document.getElementById('idea-img-preview');
+  if(!grid)return;
+  grid.innerHTML=_ideaImgs.map((item,i)=>`
+    <div class="img-thumb" style="outline:2px dashed var(--a2);outline-offset:-2px">
+      <img src="${item.dataUrl}"/>
+      <div class="img-badge" style="background:rgba(200,255,87,.85);color:#07080a">nueva</div>
+      <button class="rm" onclick="removeIdeaImg(${i})">✕</button>
+    </div>`).join('');
+}
+window.removeIdeaImg=(i)=>{_ideaImgs.splice(i,1);refreshIdeaImgPreview();};
+window.renderIdeas=()=>{
+  const list=DB.ideas||[];
+  if(!list.length){document.getElementById('ideas-list').innerHTML='<div class="empty"><div class="empty-i">💡</div><p>Sin ideas aún. ¡Propone la primera!</p></div>';return;}
+  document.getElementById('ideas-list').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+      ${list.map(i=>{
+        const canDel=window._P?.IS_OWN||(CU.username||CU)===i.by;
+        return`<div class="tc" style="flex-direction:column;align-items:flex-start;gap:8px">
+          <div class="tt2">💡 ${esc(i.titulo||'')}</div>
+          <div style="font-size:12px;color:var(--mu);line-height:1.5">${esc((i.desc||'').slice(0,150))}${(i.desc||'').length>150?'...':''}</div>
+          ${(i.imagenes||[]).length?`<div class="tc-imgs">${i.imagenes.map((url,idx)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(i.imagenes)},${idx})"/>`).join('')}</div>`:''}
+          ${(i.links||[]).length?`<div style="display:flex;flex-direction:column;gap:3px">${i.links.map(l=>`<a href="${esc(l)}" target="_blank" style="font-size:11px;color:var(--a2);text-decoration:underline;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l).slice(0,50)}</a>`).join('')}</div>`:''}
+          <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:4px">
+            <span style="font-size:10px;color:var(--mu);font-family:var(--mo)">👤 ${i.by} · ${fd(i.createdAt)}</span>
+            ${canDel?`<button class="ia del" onclick="delIdea('${i.id}')">✕</button>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+};
+window.openModalIdea=()=>{
+  ['idea-titulo','idea-desc','idea-links'].forEach(id=>document.getElementById(id).value='');
+  _ideaImgs=[];
+  refreshIdeaImgPreview();
+  document.getElementById('ov-idea').classList.add('on');
+};
+window.closeModalIdea=()=>document.getElementById('ov-idea').classList.remove('on');
+window.saveIdea=async()=>{
+  const titulo=document.getElementById('idea-titulo').value.trim();
+  if(!titulo){showToast('Título requerido',true);return;}
+  const links=document.getElementById('idea-links').value.trim().split('\n').map(l=>l.trim()).filter(Boolean);
+  try{
+    // Upload images if any
+    let imgUrls=[];
+    if(_ideaImgs.length){
+      const CLOUD='dkrlj5qby';const PRESET='controleventify';
+      for(const {file} of _ideaImgs){
+        const fd2=new FormData();fd2.append('file',file);fd2.append('upload_preset',PRESET);fd2.append('folder','panel/ideas');
+        const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`,{method:'POST',body:fd2});
+        const d=await r.json();if(d.secure_url)imgUrls.push(d.secure_url);
+      }
+    }
+    await addDoc(collection(db,'ideas'),{titulo,desc:document.getElementById('idea-desc').value.trim(),links,imagenes:imgUrls,by:CU.username||CU,createdAt:serverTimestamp()});
+    _ideaImgs=[];
+    closeModalIdea();showToast('Idea publicada ✓');
+  }catch(e){showToast('Error: '+e.message,true);}
+};
+window.delIdea=async id=>{
+  if(!confirm('¿Eliminar esta idea?'))return;
+  try{await deleteDoc(doc(db,'ideas',id));showToast('Eliminado');}catch(e){showToast(e.message,true);}
+};
+
+/* ══ EQUIPO ══ */
+window.renderEquipo=()=>{
+  const TIERS=[
+    {key:'owner',lbl:'Owners',col:'#f59e0b'},
+    {key:'admin',lbl:'Admins',col:'#818cf8'},
+    {key:'mod',lbl:'Moderadores',col:'#34d399'},
+    {key:'helper',lbl:'Helpers',col:'#67e8f9'},
+    {key:'config',lbl:'Configuradores',col:'#f472b6'},
+  ];
+  let html='';
+  TIERS.forEach(tier=>{
+    const members=STAFF.filter(s=>s.tier===tier.key);
+    if(!members.length)return;
+    html+=`<div style="margin-bottom:28px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:${tier.col};margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px">${tier.lbl} <span style="opacity:.45">${members.length}</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px">
+        ${members.map(a=>{
+          const warns=DB.warns.filter(w=>w.jugador===a.username||w.por===a.username).length;
+          const tasks=DB.tasks.filter(t=>t.asignado===a.username&&!t.done).length;
+          return`<div class="ecard" style="background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center" onclick="previewStaff('${a.username}')" onmouseover="this.style.borderColor='${tier.col}40'" onmouseout="this.style.borderColor='var(--bd)'">
+            <div style="width:46px;height:46px;border-radius:14px;background:${a.grad};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;margin:0 auto 10px">${a.av}</div>
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px">${a.username}</div>
+            <div style="font-size:10px;font-family:var(--mo);font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:${tier.col};margin-bottom:6px">${a.role}</div>
+            <div style="font-size:10px;color:var(--mu);font-family:var(--mo)">⚡ ${warns} sanc. · ✅ ${tasks} tarea(s)</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('equipo-list').innerHTML=html;
+};
+window.previewStaff=username=>{
+  const a=STAFF.find(s=>s.username===username);if(!a)return;
+  const warns=DB.warns.filter(w=>w.por===a.username).length;
+  const tasks=DB.tasks.filter(t=>t.asignado===a.username).length;
+  const tasksDone=DB.tasks.filter(t=>t.asignado===a.username&&t.done).length;
+  const rows=`
+    <div style="text-align:center;padding:16px 0 20px">
+      <div style="width:68px;height:68px;border-radius:18px;background:${a.grad};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;margin:0 auto 12px">${a.av}</div>
+      <div style="font-size:18px;font-weight:800">${a.username}</div>
+      <div style="font-size:11px;font-family:var(--mo);font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:${a.color};margin-top:4px">${a.role}</div>
+    </div>
+    ${pdRow('Correo',`<span style="color:var(--a2);font-family:var(--mo)">${a.username.toLowerCase()}@eventifyteam.com</span>`)}
+    ${pdRow('Sanciones aplicadas',warns>0?`<span style="color:var(--a3);font-weight:700">${warns}</span>`:'<span style="color:var(--a1)">0 ✓</span>')}
+    ${pdRow('Tareas totales',`${tasks} (${tasksDone} completadas)`)}
+    ${pdRow('Tier',`<span style="text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.8px;color:${a.color}">${a.tier}</span>`)}`;
+  openPreview('👥',a.username,rows,'');
+};
+
+/* ══ PREVIEW DRAWER ══ */
+function openPreview(icon, title, rows, actions=''){
+  document.getElementById('pd-icon').textContent=icon;
+  document.getElementById('pd-title').textContent=title;
+  document.getElementById('pd-body').innerHTML=rows;
+  document.getElementById('pd-actions').innerHTML=actions;
+  document.getElementById('preview-drawer').classList.add('on');
+  document.getElementById('pd-overlay').classList.add('on');
+}
+window.closePreview=()=>{
+  document.getElementById('preview-drawer').classList.remove('on');
+  document.getElementById('pd-overlay').classList.remove('on');
+};
+function pdRow(label, value){
+  if(!value||value==='—')return`<div class="pd-row"><div class="pd-label">${label}</div><div class="pd-value" style="color:var(--mu);opacity:.5">Sin datos</div></div>`;
+  return`<div class="pd-row"><div class="pd-label">${label}</div><div class="pd-value">${value}</div></div>`;
+}
+window.previewUser=id=>{
+  const u=DB.users.find(x=>x.id===id);if(!u)return;
+  const warns=DB.warns.filter(w=>w.jugador===u.nombre).length;
+  const tickets=DB.tickets.filter(t=>t.jugador===u.nombre).length;
+  let rows=`
+    ${pdRow('Nombre',`<b>${esc(u.nombre||'—')}</b>`)}
+    ${pdRow('Discord',u.discord?`<span style="color:var(--a2);font-family:var(--mo)">${esc(u.discord)}</span>`:'—')}
+    ${pdRow('Rol',rolB(u.rol))}
+    ${pdRow('Estado',estB(u.estado))}
+    ${pdRow('Notas',u.notas?esc(u.notas):'—')}
+    ${pdRow('Warns',warns>0?`<span style="color:var(--a3);font-weight:700">${warns} sanción(es)</span>`:''||'<span style="color:var(--a1)">Sin sanciones ✓</span>')}
+    ${pdRow('Tickets',`${tickets} ticket(s)`)}
+    ${pdRow('Registrado',fd(u.createdAt))}
+    ${u.imagenes&&u.imagenes.length?`<div class="pd-row"><div class="pd-label">Imágenes (${u.imagenes.length})</div><div class="pd-imgs">${u.imagenes.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(u.imagenes)},${i})"/>`).join('')}</div></div>`:''}`;
+  openPreview('👤',u.nombre||'Jugador',rows,
+    `<button class="btn sm" onclick="closePreview();editRec('users','${u.id}')">✏ Editar</button>
+     <button class="btn sm coral" onclick="closePreview();delRec('users','${u.id}')">✕ Eliminar</button>`);
+};
+window.previewWarn=id=>{
+  const w=DB.warns.find(x=>x.id===id);if(!w)return;
+  const tipoCols={warn:'c2',mute:'c4',kick:'c3',ban:'c3'};
+  let rows=`
+    ${pdRow('Jugador',`<b>${esc(w.jugador||'—')}</b>`)}
+    ${pdRow('Tipo',tipoB(w.tipo))}
+    ${pdRow('Motivo',w.motivo?esc(w.motivo):'—')}
+    ${pdRow('Sancionado por',w.por?`<span style="color:var(--a4);font-family:var(--mo)">${esc(w.por)}</span>`:'—')}
+    ${pdRow('Fecha',fd(w.createdAt))}
+    ${w.imagenes&&w.imagenes.length?`<div class="pd-row"><div class="pd-label">Evidencia (${w.imagenes.length})</div><div class="pd-imgs">${w.imagenes.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(w.imagenes)},${i})"/>`).join('')}</div></div>`:''}`;
+  openPreview('⚠️',`Sanción · ${w.jugador||'—'}`,rows,
+    `<button class="btn sm coral" onclick="closePreview();delRec('warns','${w.id}')">✕ Eliminar</button>`);
+};
+window.previewTicket=id=>{
+  const t=DB.tickets.find(x=>x.id===id);if(!t)return;
+  let rows=`
+    ${pdRow('Asunto',`<b>${esc(t.asunto||'—')}</b>`)}
+    ${pdRow('Jugador',t.jugador?esc(t.jugador):'—')}
+    ${pdRow('Categoría',catB(t.categoria))}
+    ${pdRow('Estado',tkB(t.estado))}
+    ${pdRow('Asignado a',t.asignado?`<span style="color:var(--a2);font-family:var(--mo)">${esc(t.asignado)}</span>`:'—')}
+    ${pdRow('Descripción',t.descripcion?`<div style="white-space:pre-wrap;line-height:1.6">${esc(t.descripcion)}</div>`:'—')}
+    ${pdRow('Creado',fd(t.createdAt))}
+    ${t.imagenes&&t.imagenes.length?`<div class="pd-row"><div class="pd-label">Adjuntos (${t.imagenes.length})</div><div class="pd-imgs">${t.imagenes.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(t.imagenes)},${i})"/>`).join('')}</div></div>`:''}`;
+  openPreview('🎫',t.asunto||'Ticket',rows,
+    `<button class="btn sm sky" onclick="closePreview();editRec('tickets','${t.id}')">✏ Editar</button>
+     <button class="btn sm coral" onclick="closePreview();delRec('tickets','${t.id}')">✕ Eliminar</button>`);
+};
+window.previewTask=id=>{
+  const t=DB.tasks.find(x=>x.id===id);if(!t)return;
+  const catColors={'Survival':'#34d399','Events':'#f59e0b','Staff':'#818cf8','Const.':'#f472b6','Admin':'#67e8f9'};
+  const cc=catColors[t.categoria]||'var(--mu)';
+  let rows=`
+    ${pdRow('Título',`<b style="${t.done?'text-decoration:line-through;opacity:.5':''}">${esc(t.titulo||'—')}</b>`)}
+    ${t.categoria?pdRow('Categoría',`<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:${cc};background:${cc}18;border-radius:4px;padding:3px 9px;font-family:var(--mo)">${t.categoria}</span>`):''}
+    ${pdRow('Prioridad',prioB(t.prioridad))}
+    ${pdRow('Estado',t.done?`<span class="bg bg1">✓ Completada</span>`:`<span class="bg bg2">⏳ Pendiente</span>`)}
+    ${pdRow('Asignado a',t.asignado?`<span style="color:var(--a2);font-family:var(--mo)">${esc(t.asignado)}</span>`:'—')}
+    ${t.deadline?pdRow('Fecha límite',`<span style="color:var(--a3);font-family:var(--mo)">📅 ${t.deadline}</span>`):''}
+    ${pdRow('Nota',t.nota?`<div style="white-space:pre-wrap;line-height:1.6">${esc(t.nota)}</div>`:'—')}
+    ${t.imagenes&&t.imagenes.length?`<div class="pd-row"><div class="pd-label">Imágenes (${t.imagenes.length})</div><div class="pd-imgs">${t.imagenes.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(t.imagenes)},${i})"/>`).join('')}</div></div>`:''}`;
+  openPreview('📋',t.titulo||'Tarea',rows,
+    `<button class="btn sm" onclick="closePreview();toggleTask('${t.id}',${!!t.done})">${t.done?'↩ Reabrir':'✓ Completar'}</button>
+     <button class="btn sm coral" onclick="closePreview();delRec('tasks','${t.id}')">✕ Eliminar</button>`);
+};
+
+/* ══ CANAL PRIVADO (solo Owners + SpaceLifi) ══ */
+window.renderCanal=()=>{
+  const wrap=document.getElementById('canal-wrap');
+  const IS_SPACELIFI=window._P?.IS_SPACELIFI;
+  const IS_CONFIG=window._P?.IS_CONFIG;
+  const canAccess=window._P?.IS_OWN||IS_CONFIG||IS_SPACELIFI;
+  if(!canAccess){
+    wrap.innerHTML='<div class="empty"><div class="empty-i">🔐</div><p>Canal privado · Solo Owners, Configuradores y SpaceLifi</p></div>';
+    return;
+  }
+  const msgs=DB.canal||[];
+  wrap.innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:rgba(181,87,255,.06);border:1px solid rgba(181,87,255,.2);border-radius:10px">
+      <span style="font-size:18px">🔐</span>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--a4)">Canal privado</div>
+        <div style="font-size:11px;color:var(--mu);font-family:var(--mo)">Acceso: Owners · Configuradores · SpaceLifi</div>
+      </div>
+    </div>
+    <div class="chat-wrap">
+      <div class="chat-msgs" id="canal-msgs">
+        ${msgs.length?msgs.map(m=>{
+          const isMe=(CU.username||CU)===m.sender;
+          const acc=STAFF.find(s=>s.username===m.sender)||{grad:'linear-gradient(135deg,#444,#666)',av:'?',color:'#888'};
+          const canDel=isMe||window._P?.IS_OWN;
+          return`<div class="chat-bubble ${isMe?'me':'them'}">
+            <div class="chat-meta">
+              <div class="chat-av" style="background:${acc.grad}">${acc.av}</div>
+              <span style="color:${acc.color};font-weight:700">${m.sender}</span>
+              <span>${m.time||''}</span>
+              ${canDel?`<button class="chat-del" onclick="delCanalMsg('${m.id}')">✕</button>`:''}
+            </div>
+            <div class="chat-text">${esc(m.texto||'')}</div>
+          </div>`;
+        }).join(''):'<div class="empty" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center"><div class="empty-i">💬</div><p>Sin mensajes aún</p></div>'}
+      </div>
+      <div class="chat-input-bar">
+        <input id="canal-inp" placeholder="Mensaje privado…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCanalMsg();}"/>
+        <button class="btn" style="background:var(--a4);padding:10px 16px" onclick="sendCanalMsg()">➤</button>
+      </div>
+    </div>`;
+  setTimeout(()=>{const a=document.getElementById('canal-msgs');if(a)a.scrollTop=a.scrollHeight;},50);
+};
+window.sendCanalMsg=async()=>{
+  const inp=document.getElementById('canal-inp');
+  const txt=inp.value.trim();if(!txt)return;
+  try{
+    await addDoc(collection(db,'canal'),{sender:CU.username||CU,texto:txt,time:new Date().toLocaleString('es-ES'),createdAt:serverTimestamp()});
+    inp.value='';
+  }catch(e){showToast(e.message,true);}
+};
+window.delCanalMsg=async id=>{
+  try{await deleteDoc(doc(db,'canal',id));}catch(e){showToast(e.message,true);}
+};
+
+/* ══ UPDATED go() for new panels ══ */
+window.go = (tab, btn) => {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('panel-' + tab).classList.add('on');
+  btn.classList.add('on');
+  closePreview();
+  if(tab==='eventos') renderEventos();
+  if(tab==='ideas') renderIdeas();
+  if(tab==='equipo') renderEquipo();
+  if(tab==='canal') renderCanal();
+};
+
+/* Also update "Asignado a" in tickets to include all staff */
+
 </script>
 </body>
 </html>
