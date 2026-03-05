@@ -70,7 +70,7 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fn);min-height:100vh
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:11px;margin-bottom:22px}
 .sc{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:17px 18px}
 .sc-l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--mu);font-family:var(--mo);margin-bottom:7px}
-.sc-v{font-size:28px;font-weight:800;letter-spacing:-1px}
+.sc-v{font-size:52px;font-weight:800;letter-spacing:-2px;line-height:1}
 .c1{color:var(--a1)}.c2{color:var(--a2)}.c3{color:var(--a3)}.c4{color:var(--a4)}
 
 .tw{background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
@@ -278,6 +278,47 @@ tbody tr{cursor:pointer}
 .sev-alta{background:rgba(255,107,87,.12);color:#ff6b57;font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
 .sev-media{background:rgba(87,200,255,.12);color:#57c8ff;font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
 .sev-baja{background:rgba(90,98,117,.15);color:var(--mu);font-family:var(--mo);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px}
+
+/* ── DASHBOARD ── */
+.db-hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:26px}
+.db-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:22px 22px 18px;position:relative;overflow:hidden;cursor:default;transition:transform .18s,border-color .18s}
+.db-card:hover{transform:translateY(-3px)}
+.db-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.db-card.dc-warn::before{background:linear-gradient(90deg,#ff6b57,#ff9f57)}
+.db-card.dc-ban::before{background:linear-gradient(90deg,#ff6b57,#c2334e)}
+.db-card.dc-task::before{background:linear-gradient(90deg,#b557ff,#818cf8)}
+.db-card.dc-ticket::before{background:linear-gradient(90deg,#34d399,#57c8ff)}
+.db-card-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:52px;opacity:.07;pointer-events:none;line-height:1}
+.db-card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--mu);font-family:var(--mo);margin-bottom:8px}
+.db-card-value{font-size:64px;font-weight:800;letter-spacing:-3px;line-height:1;margin-bottom:4px}
+.db-card-sub{font-size:11px;color:var(--mu);font-family:var(--mo)}
+.db-card.dc-warn .db-card-value{color:#ff6b57}
+.db-card.dc-ban  .db-card-value{color:#ff7043}
+.db-card.dc-task .db-card-value{color:#b557ff}
+.db-card.dc-ticket .db-card-value{color:#34d399}
+/* notif */
+.notif-row{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--s2);border-radius:10px;border-left:3px solid var(--a4);margin-bottom:8px}
+.notif-icon{font-size:18px;flex-shrink:0;line-height:1.2}
+.notif-text{font-size:13px;font-weight:600}
+.notif-sub{font-size:11px;color:var(--mu);font-family:var(--mo);margin-top:2px}
+/* db bottom grid */
+.db-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+@media(max-width:700px){.db-grid{grid-template-columns:1fr}}
+.db-box{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden}
+.db-box-head{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid var(--bd)}
+.db-box-head span{font-size:14px}
+.db-box-head h4{font-size:13px;font-weight:700}
+.db-box-body{padding:10px}
+.db-ev-item{padding:9px 10px;border-radius:8px;margin-bottom:5px;display:flex;align-items:flex-start;gap:10px;transition:background .15s;cursor:pointer}
+.db-ev-item:hover{background:var(--s2)}
+.db-ev-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.db-ev-name{font-size:13px;font-weight:600}
+.db-ev-date{font-size:11px;color:var(--mu);font-family:var(--mo);margin-top:2px}
+.db-tk-item{padding:9px 10px;border-radius:8px;margin-bottom:5px;cursor:pointer;transition:background .15s}
+.db-tk-item:hover{background:var(--s2)}
+.db-tk-top{display:flex;align-items:center;gap:7px;margin-bottom:2px}
+.db-tk-sub{font-size:11px;color:var(--mu);font-family:var(--mo)}
+
 </style>
 </head>
 <body>
@@ -300,7 +341,8 @@ tbody tr{cursor:pointer}
   <div class="tb">
     <div class="tb-logo">Panel<em>.</em></div>
     <div class="tabs">
-      <button class="tab on" onclick="go('users',this)"><span class="dot"></span>Jugadores</button>
+      <button class="tab on" id="tab-dash" onclick="go('dash',this)"><span class="dot"></span>🏠 Inicio</button>
+      <button class="tab" onclick="go('users',this)"><span class="dot"></span>Jugadores</button>
       <button class="tab"    onclick="go('warns',this)"><span class="dot"></span>Warns</button>
       <button class="tab"    onclick="go('tickets',this)"><span class="dot"></span>Tickets</button>
       <button class="tab"    onclick="go('tasks',this)"><span class="dot"></span>Tareas</button>
@@ -319,8 +361,68 @@ tbody tr{cursor:pointer}
 
   <div class="main">
 
+    <!-- DASHBOARD -->
+    <div class="panel on" id="panel-dash">
+      <div style="margin-bottom:26px">
+        <h2 style="font-size:24px;font-weight:800;letter-spacing:-.6px">Panel <b style="color:var(--a1)">Inicio</b></h2>
+        <p style="font-size:12px;color:var(--mu);font-family:var(--mo);margin-top:3px">Resumen general · tiempo real</p>
+      </div>
+      <!-- Hero stats -->
+      <div class="db-hero">
+        <div class="db-card dc-warn">
+          <div class="db-card-icon">⚠</div>
+          <div class="db-card-label">Warns</div>
+          <div class="db-card-value" id="db-warns">—</div>
+          <div class="db-card-sub">activos</div>
+        </div>
+        <div class="db-card dc-ban">
+          <div class="db-card-icon">🔨</div>
+          <div class="db-card-label">Bans</div>
+          <div class="db-card-value" id="db-bans">—</div>
+          <div class="db-card-sub">totales</div>
+        </div>
+        <div class="db-card dc-task">
+          <div class="db-card-icon">📋</div>
+          <div class="db-card-label">Tareas</div>
+          <div class="db-card-value" id="db-tasks">—</div>
+          <div class="db-card-sub">pendientes</div>
+        </div>
+        <div class="db-card dc-ticket">
+          <div class="db-card-icon">🎫</div>
+          <div class="db-card-label">Tickets</div>
+          <div class="db-card-value" id="db-tickets">—</div>
+          <div class="db-card-sub">abiertos</div>
+        </div>
+      </div>
+      <!-- Notificaciones -->
+      <div style="background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:18px 20px;margin-bottom:0">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <span style="font-size:18px">🔔</span>
+          <h3 style="font-size:15px;font-weight:700">Notifcaciones</h3>
+          <span id="db-notif-badge" style="background:rgba(181,87,255,.15);border:1px solid rgba(181,87,255,.3);color:var(--a4);font-family:var(--mo);font-size:11px;font-weight:700;border-radius:20px;padding:1px 9px">0</span>
+        </div>
+        <div id="db-notifs">
+          <div class="notif-row" style="border-left-color:var(--a1)">
+            <div class="notif-icon">✨</div>
+            <div><div class="notif-text">Todo en orden</div><div class="notif-sub">Sin notificaciones pendientes. ¡Buen trabajo!</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom grid: Próximos Eventos + Tickets Activos -->
+      <div class="db-grid">
+        <div class="db-box">
+          <div class="db-box-head"><span>📅</span><h4>Próximos Eventos</h4></div>
+          <div class="db-box-body" id="db-ev-list"><div class="empty" style="padding:30px"><div class="empty-i">📅</div><p>Sin eventos próximos</p></div></div>
+        </div>
+        <div class="db-box">
+          <div class="db-box-head"><span>🎫</span><h4>Tickets Activos</h4></div>
+          <div class="db-box-body" id="db-tk-list"><div class="empty" style="padding:30px"><div class="empty-i">🎫</div><p>Sin tickets abiertos</p></div></div>
+        </div>
+      </div>
+    </div>
+
     <!-- JUGADORES -->
-    <div class="panel on" id="panel-users">
+    <div class="panel" id="panel-users">
       <div class="ph">
         <div><h2>Jugadores <b>/ Usuarios</b></h2><p>Gestiona los miembros registrados · tiempo real</p></div>
         <button class="btn" onclick="openModal('users')">+ Agregar jugador</button>
@@ -480,7 +582,7 @@ tbody tr{cursor:pointer}
 
 <!-- MODAL EVENTO -->
 <div class="ov" id="ov-ev" onclick="if(event.target===this)closeModalEv()">
-  <div class="modal">
+  <div class="modal" style="width:540px">
     <button class="mc" onclick="closeModalEv()">×</button>
     <h3 id="ev-ttl">Nuevo Evento</h3>
     <div class="mr">
@@ -501,6 +603,15 @@ tbody tr{cursor:pointer}
     </div>
     <div class="mf"><label>Link</label><input id="ev-link" placeholder="https://..."/></div>
     <div class="mf"><label>Descripción</label><textarea id="ev-desc" placeholder="Detalles del evento..."></textarea></div>
+    <div class="mf">
+      <label>🖼 Imagen del evento</label>
+      <div class="img-upload-area" onclick="document.getElementById('ev-img-input').click()" style="padding:14px">
+        <input type="file" id="ev-img-input" accept="image/*" multiple style="display:none" onchange="handleEvImgs(event)"/>
+        <div class="up-icon" style="font-size:22px;margin-bottom:4px">📎</div>
+        <p style="font-size:12px">Clic para agregar imagen</p>
+      </div>
+      <div class="img-preview-grid" id="ev-img-preview"></div>
+    </div>
     <input type="hidden" id="ev-id"/>
     <div class="mbtns">
       <button class="btn-g" onclick="closeModalEv()">Cancelar</button>
@@ -724,6 +835,7 @@ function initApp() {
     sel.innerHTML = '<option value="">Sin asignar</option>' + STAFF.map(s=>`<option value="${s.username}">${s.username} (${s.role})</option>`).join('');
   });
   startListeners();
+  setTimeout(renderDash, 600);
   // Ideas y Equipo: todo el staff puede verlos
   document.getElementById('tab-equipo').style.display='';
   document.getElementById('tab-ideas').style.display='';
@@ -763,6 +875,12 @@ window.go = (tab, btn) => {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
   document.getElementById('panel-' + tab).classList.add('on');
   btn.classList.add('on');
+  closePreview();
+  if(tab==='eventos') renderEventos();
+  if(tab==='ideas') renderIdeas();
+  if(tab==='equipo') renderEquipo();
+  if(tab==='canal') renderCanal();
+  if(tab==='dash') renderDash();
 };
 
 /* ── RENDER ── */
@@ -775,6 +893,7 @@ function renderAll(newIds=[], col='') {
   if(document.getElementById('panel-ideas')?.classList.contains('on')) renderIdeas();
   if(document.getElementById('panel-canal')?.classList.contains('on')) renderCanal();
   if(document.getElementById('panel-equipo')?.classList.contains('on')) renderEquipo();
+  if(document.getElementById('panel-dash')?.classList.contains('on')) renderDash();
 }
 
 /* ── IMAGE STACK HELPER ── */
@@ -811,6 +930,78 @@ window.renderUsers = (newIds=[]) => {
       <button class="ia img-btn" onclick="openImgUpload('users','${u.id}')">🖼</button>
       <button class="ia del" onclick="delRec('users','${u.id}')">✕</button>
     </div></td></tr>`).join('');
+};
+
+/* ══ DASHBOARD ══ */
+window.renderDash=()=>{
+  // Hero counters
+  const warns=DB.warns.filter(w=>w.tipo!=='ban').length;
+  const bans=DB.warns.filter(w=>w.tipo==='ban').length;
+  const tasks=DB.tasks.filter(t=>!t.done).length;
+  const tickets=DB.tickets.filter(t=>t.estado==='abierto').length;
+  const dw=document.getElementById('db-warns'); if(dw) dw.textContent=warns;
+  const db2=document.getElementById('db-bans');  if(db2) db2.textContent=bans;
+  const dt=document.getElementById('db-tasks');  if(dt) dt.textContent=tasks;
+  const dti=document.getElementById('db-tickets');if(dti) dti.textContent=tickets;
+
+  // Notificaciones automáticas
+  const notifs=[];
+  if(bans>0) notifs.push({ic:'🔨',col:'#ff6b57',txt:`${bans} ban(s) registrado(s)`,sub:'Revisá el historial de sanciones'});
+  if(warns>0) notifs.push({ic:'⚠',col:'#ff9f57',txt:`${warns} warn(s) activo(s)`,sub:'Hay sanciones recientes sin resolver'});
+  if(tasks>0) notifs.push({ic:'📋',col:'#b557ff',txt:`${tasks} tarea(s) pendiente(s)`,sub:'El equipo tiene trabajo por completar'});
+  if(tickets>0) notifs.push({ic:'🎫',col:'#34d399',txt:`${tickets} ticket(s) abierto(s)`,sub:'Hay tickets esperando atención'});
+  const badge=document.getElementById('db-notif-badge');
+  if(badge) badge.textContent=notifs.length;
+  const nb=document.getElementById('db-notifs');
+  if(nb){
+    if(!notifs.length){
+      nb.innerHTML=`<div class="notif-row" style="border-left-color:var(--a1)"><div class="notif-icon">✨</div><div><div class="notif-text">Todo en orden</div><div class="notif-sub">Sin notificaciones pendientes. ¡Buen trabajo!</div></div></div>`;
+    } else {
+      nb.innerHTML=notifs.map(n=>`<div class="notif-row" style="border-left-color:${n.col}"><div class="notif-icon">${n.ic}</div><div><div class="notif-text">${n.txt}</div><div class="notif-sub">${n.sub}</div></div></div>`).join('');
+    }
+  }
+
+  // Próximos Eventos
+  const now=new Date();
+  const upcoming=(DB.eventos||[]).filter(e=>new Date((e.fecha||'')+' '+(e.hora||'23:59'))>=now).slice(-5).reverse();
+  const evEl=document.getElementById('db-ev-list');
+  if(evEl){
+    if(!upcoming.length){
+      evEl.innerHTML='<div class="empty" style="padding:30px"><div class="empty-i">📅</div><p>Sin eventos próximos</p></div>';
+    } else {
+      const EV_COLS={reunion:'#818cf8',beta:'#a855f7',evento:'#f59e0b',mainevent:'#f43f5e',streamer:'#ec4899',collab:'#06b6d4',maint:'#9b91c2'};
+      evEl.innerHTML=upcoming.map(e=>{
+        const col=EV_COLS[e.tipo]||'#f59e0b';
+        const dt=new Date(e.fecha||'');
+        const imgs=e.imagenes||[];
+        return`<div class="db-ev-item" onclick="go('eventos',document.getElementById('tab-eventos'))">
+          <div class="db-ev-dot" style="background:${col}"></div>
+          <div style="flex:1;min-width:0">
+            <div class="db-ev-name">${esc(e.nombre||'')}</div>
+            <div class="db-ev-date">📅 ${dt.toLocaleDateString('es',{weekday:'short',day:'2-digit',month:'short'})}${e.hora?' · 🕐 '+e.hora:''}</div>
+          </div>
+          ${imgs.length?`<img src="${imgs[0]}" style="width:36px;height:36px;border-radius:7px;object-fit:cover;flex-shrink:0;border:1px solid var(--bd)"/>`:''}
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Tickets activos
+  const openTks=(DB.tickets||[]).filter(t=>t.estado==='abierto').slice(0,6);
+  const tkEl=document.getElementById('db-tk-list');
+  if(tkEl){
+    if(!openTks.length){
+      tkEl.innerHTML='<div class="empty" style="padding:30px"><div class="empty-i">🎫</div><p>Sin tickets abiertos</p></div>';
+    } else {
+      tkEl.innerHTML=openTks.map(t=>`<div class="db-tk-item" onclick="go('tickets',document.querySelector('[onclick*=tickets]'))">
+        <div class="db-tk-top">
+          <span style="font-size:13px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.asunto||'—')}</span>
+          ${catB(t.categoria)}
+        </div>
+        <div class="db-tk-sub">${esc(t.jugador||'—')} · ${fd(t.createdAt)}</div>
+      </div>`).join('');
+    }
+  }
 };
 
 /* ── WARN STATE ── */
@@ -1359,9 +1550,11 @@ window.renderEventos=()=>{
 function evCard(e){
   const tp=EV_TIPOS[e.tipo]||EV_TIPOS.evento;const st=evStatus(e);
   const dt=new Date(e.fecha||'');
-  const canDel=window._P?.IS_OWN;
-  return`<div class="tc" style="margin-bottom:10px">
-    <div style="width:4px;background:${tp.col};border-radius:4px;flex-shrink:0;align-self:stretch;margin-right:12px"></div>
+  const canEdit=window._P?.IS_OWN||window._P?.IS_ADM;
+  const imgs=e.imagenes||[];
+  return`<div class="tc" style="margin-bottom:10px;align-items:stretch">
+    <div style="width:4px;background:${tp.col};border-radius:4px;flex-shrink:0;margin-right:12px"></div>
+    ${imgs.length?`<img src="${imgs[0]}" onclick="openViewer(${JSON.stringify(imgs)},0)" style="width:72px;height:72px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--bd);cursor:pointer;transition:transform .15s;align-self:center;margin-right:4px" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''"/>`:''}
     <div class="tb2" style="flex:1">
       <div class="tt2">${tp.ic} ${esc(e.nombre||'')}</div>
       <div class="tm">
@@ -1369,27 +1562,58 @@ function evCard(e){
         <span class="bg ${st.cls}">${st.l}</span>
         ${e.hora?`<span style="font-size:11px;color:var(--mu);font-family:var(--mo)">🕐 ${e.hora}</span>`:''}
         ${e.link?`<a href="${esc(e.link)}" target="_blank" style="font-size:11px;color:var(--a2);font-family:var(--mo)">🔗 Link</a>`:''}
+        ${imgs.length>1?`<span style="font-size:10px;color:var(--a2);font-family:var(--mo);cursor:pointer" onclick="openViewer(${JSON.stringify(imgs)},0)">+${imgs.length-1} img</span>`:''}
       </div>
       ${e.desc?`<div style="font-size:12px;color:var(--mu);margin-top:5px">${esc(e.desc)}</div>`:''}
       <div style="font-size:10px;color:var(--mu);font-family:var(--mo);margin-top:6px">📅 ${dt.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
     </div>
-    ${canDel?`<div style="display:flex;gap:4px;flex-shrink:0">
+    ${canEdit?`<div style="display:flex;gap:4px;flex-shrink:0;align-self:flex-start">
       <button class="ia" onclick="editEvento('${e.id}')">✏</button>
       <button class="ia del" onclick="delEvento('${e.id}')">✕</button>
     </div>`:''}
   </div>`;
 }
 
+
+/* ── EVENTO IMAGE STATE ── */
+let _evImgs = [];
+
+window.handleEvImgs = async (e) => {
+  const files = Array.from(e.target.files);
+  for(const f of files){
+    if(f.size > 5*1024*1024){showToast('Imagen muy grande (máx 5MB)',true);continue;}
+    const dataUrl = await fileToDataUrl(f);
+    _evImgs.push({dataUrl,file:f});
+  }
+  refreshEvImgPreview();
+  e.target.value='';
+};
+
+function refreshEvImgPreview(){
+  const grid=document.getElementById('ev-img-preview');
+  if(!grid)return;
+  grid.innerHTML=_evImgs.map((item,i)=>`
+    <div class="img-thumb" style="outline:2px dashed var(--a2);outline-offset:-2px">
+      <img src="${item.dataUrl}"/>
+      <div class="img-badge" style="background:rgba(87,200,255,.85);color:#07080a">nueva</div>
+      <button class="rm" onclick="removeEvImg(${i})">✕</button>
+    </div>`).join('');
+}
+window.removeEvImg=(i)=>{_evImgs.splice(i,1);refreshEvImgPreview();};
+
 window.openModalEv=()=>{
+  _evImgs=[];
   document.getElementById('ev-id').value='';
   document.getElementById('ev-ttl').textContent='Nuevo Evento';
   ['ev-nombre','ev-link','ev-desc','ev-hora'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('ev-fecha').value='';
   document.getElementById('ev-tipo').value='evento';
+  const g=document.getElementById('ev-img-preview');if(g)g.innerHTML='';
   document.getElementById('ov-ev').classList.add('on');
 };
 window.closeModalEv=()=>document.getElementById('ov-ev').classList.remove('on');
 window.editEvento=id=>{
+  _evImgs=[];
   const e=DB.eventos.find(x=>x.id===id);if(!e)return;
   document.getElementById('ev-id').value=id;
   document.getElementById('ev-ttl').textContent='Editar Evento';
@@ -1399,19 +1623,39 @@ window.editEvento=id=>{
   document.getElementById('ev-hora').value=e.hora||'';
   document.getElementById('ev-link').value=e.link||'';
   document.getElementById('ev-desc').value=e.desc||'';
+  // show existing images
+  const imgs=e.imagenes||[];
+  const g=document.getElementById('ev-img-preview');
+  if(g) g.innerHTML=imgs.map((url,i)=>`<div class="img-thumb"><img src="${url}" onclick="openViewer(${JSON.stringify(imgs)},${i})"/><div class="img-badge">guardada</div></div>`).join('');
   document.getElementById('ov-ev').classList.add('on');
 };
 window.saveEvento=async()=>{
   const nombre=document.getElementById('ev-nombre').value.trim();
   const fecha=document.getElementById('ev-fecha').value;
   if(!nombre||!fecha){showToast('Nombre y fecha requeridos',true);return;}
-  const id=document.getElementById('ev-id').value;
+  const editId=document.getElementById('ev-id').value;
   const entry={nombre,tipo:document.getElementById('ev-tipo').value,fecha,
     hora:document.getElementById('ev-hora').value,link:document.getElementById('ev-link').value.trim(),
     desc:document.getElementById('ev-desc').value.trim(),by:CU.username||CU};
   try{
-    if(id) await updateDoc(doc(db,'eventos',id),{...entry,updatedAt:serverTimestamp()});
-    else await addDoc(collection(db,'eventos'),{...entry,createdAt:serverTimestamp()});
+    // Upload any new images
+    let newUrls=[];
+    if(_evImgs.length){
+      const CLOUD='dkrlj5qby';const PRESET='controleventify';
+      for(const {file} of _evImgs){
+        const fd2=new FormData();fd2.append('file',file);fd2.append('upload_preset',PRESET);fd2.append('folder','panel/eventos');
+        const r=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD+'/image/upload',{method:'POST',body:fd2});
+        const d=await r.json();if(d.secure_url)newUrls.push(d.secure_url);
+      }
+    }
+    if(editId){
+      const existing=DB.eventos.find(x=>x.id===editId);
+      const allImgs=[...(existing?.imagenes||[]),...newUrls];
+      await updateDoc(doc(db,'eventos',editId),{...entry,imagenes:allImgs,updatedAt:serverTimestamp()});
+    } else {
+      await addDoc(collection(db,'eventos'),{...entry,imagenes:newUrls,createdAt:serverTimestamp()});
+    }
+    _evImgs=[];
     closeModalEv();showToast('Evento guardado ✓');
   }catch(e){showToast('Error: '+e.message,true);}
 };
