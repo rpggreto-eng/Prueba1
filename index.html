@@ -16,6 +16,11 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--tx);font-family:var(--fn);min-height:100vh;overflow-x:hidden}
 
+/* LIVE INDICATOR */
+.live-dot{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mo);color:var(--a1);background:rgba(200,255,87,.08);border:1px solid rgba(200,255,87,.2);border-radius:20px;padding:4px 10px}
+.live-dot::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--a1);box-shadow:0 0 8px var(--a1);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+
 #login{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .35s,transform .35s}
 #login.out{opacity:0;transform:scale(.96);pointer-events:none}
 .lbox{width:390px;background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:48px 38px 38px;position:relative;overflow:hidden}
@@ -36,8 +41,8 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fn);min-height:100vh
 #app{display:none;flex-direction:column;min-height:100vh}
 #app.on{display:flex}
 
-.tb{height:58px;background:var(--s1);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 26px;position:sticky;top:0;z-index:100}
-.tb-logo{font-size:16px;font-weight:800;letter-spacing:-.5px;margin-right:26px;white-space:nowrap}
+.tb{height:58px;background:var(--s1);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 26px;position:sticky;top:0;z-index:100;gap:14px}
+.tb-logo{font-size:16px;font-weight:800;letter-spacing:-.5px;white-space:nowrap}
 .tb-logo em{font-style:normal;color:var(--a1)}
 .tabs{display:flex;gap:2px;flex:1;overflow-x:auto}
 .tabs::-webkit-scrollbar{display:none}
@@ -94,6 +99,8 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
 .ia{background:transparent;border:1px solid var(--bd);border-radius:6px;padding:4px 9px;font-size:11px;color:var(--mu);cursor:pointer;transition:all .15s;font-family:var(--mo)}
 .ia:hover{color:var(--tx);border-color:var(--mu)}
 .ia.del:hover{color:var(--a3);border-color:var(--a3)}
+.ia.img-btn{color:var(--a2);border-color:rgba(87,200,255,.3)}
+.ia.img-btn:hover{color:var(--tx);border-color:var(--a2);background:rgba(87,200,255,.08)}
 
 .empty{padding:50px;text-align:center;color:var(--mu)}
 .empty-i{font-size:38px;opacity:.3;margin-bottom:10px}
@@ -127,9 +134,10 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
 .tdel{background:transparent;border:none;color:var(--mu);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:5px;transition:color .2s;line-height:1}
 .tdel:hover{color:var(--a3)}
 
+/* MODAL */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:800;opacity:0;pointer-events:none;transition:opacity .2s}
 .ov.on{opacity:1;pointer-events:all}
-.modal{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:30px 26px;width:460px;max-width:94vw;transform:translateY(18px);transition:transform .2s;position:relative}
+.modal{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:30px 26px;width:500px;max-width:94vw;max-height:88vh;overflow-y:auto;transform:translateY(18px);transition:transform .2s;position:relative}
 .ov.on .modal{transform:translateY(0)}
 .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--a2),var(--a1));border-radius:16px 16px 0 0}
 .modal h3{font-size:17px;font-weight:800;margin-bottom:20px}
@@ -144,7 +152,51 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
 .mr{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .mbtns{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
 
-.toast{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--bd);border-left:3px solid var(--a1);border-radius:10px;padding:12px 18px;font-size:13px;font-family:var(--mo);z-index:9999;transform:translateY(16px);opacity:0;transition:all .3s;pointer-events:none;max-width:300px}
+/* IMAGE UPLOAD AREA */
+.img-upload-area{border:2px dashed var(--bd);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;background:var(--s2)}
+.img-upload-area:hover,.img-upload-area.drag{border-color:var(--a2);background:rgba(87,200,255,.04)}
+.img-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-upload-area .up-icon{font-size:28px;margin-bottom:8px;opacity:.5}
+.img-upload-area p{font-size:12px;color:var(--mu);font-family:var(--mo)}
+.img-upload-area .up-hint{font-size:10px;color:var(--mu);opacity:.6;margin-top:4px}
+.img-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:10px}
+.img-thumb{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;border:1px solid var(--bd);background:var(--s3)}
+.img-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.img-thumb .rm{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.7);border:none;border-radius:4px;color:var(--a3);cursor:pointer;font-size:12px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;line-height:1;transition:background .15s}
+.img-thumb .rm:hover{background:var(--a3);color:#fff}
+.img-uploading{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--a2);font-family:var(--mo);margin-top:8px}
+.spinner{width:14px;height:14px;border:2px solid rgba(87,200,255,.2);border-top-color:var(--a2);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* IMAGE VIEWER MODAL */
+.img-viewer{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.img-viewer.on{opacity:1;pointer-events:all}
+.img-viewer img{max-width:90vw;max-height:85vh;border-radius:10px;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.img-viewer-close{position:fixed;top:18px;right:22px;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px 12px;border-radius:8px;transition:background .2s}
+.img-viewer-close:hover{background:rgba(255,255,255,.2)}
+.img-viewer-nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center}
+.img-viewer-nav span{font-size:12px;font-family:var(--mo);color:rgba(255,255,255,.5)}
+.img-viewer-nav button{background:rgba(255,255,255,.1);border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:var(--mo);font-size:12px;transition:background .2s}
+.img-viewer-nav button:hover{background:rgba(255,255,255,.2)}
+
+/* IMAGES IN TABLE */
+.img-stack{display:flex;align-items:center;gap:-4px}
+.img-stack-th{width:26px;height:26px;border-radius:5px;border:2px solid var(--s1);object-fit:cover;margin-left:-6px;cursor:pointer;transition:transform .15s}
+.img-stack-th:first-child{margin-left:0}
+.img-stack-th:hover{transform:scale(1.15);z-index:10;position:relative}
+.img-count{font-size:10px;font-family:var(--mo);color:var(--a2);margin-left:4px;cursor:pointer}
+.img-count:hover{text-decoration:underline}
+
+/* INLINE IMAGES IN TASK CARDS */
+.tc-imgs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tc-imgs img{width:50px;height:50px;border-radius:6px;object-fit:cover;border:1px solid var(--bd);cursor:pointer;transition:transform .15s,border-color .15s}
+.tc-imgs img:hover{transform:scale(1.08);border-color:var(--a2)}
+
+/* REAL-TIME FLASH */
+@keyframes rowFlash{0%{background:rgba(200,255,87,.08)}100%{background:transparent}}
+.rt-new{animation:rowFlash 1.5s ease-out}
+
+.toast{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--bd);border-left:3px solid var(--a1);border-radius:10px;padding:12px 18px;font-size:13px;font-family:var(--mo);z-index:9999;transform:translateY(16px);opacity:0;transition:all .3s;pointer-events:none;max-width:320px}
 .toast.on{transform:translateY(0);opacity:1}
 .toast.err{border-left-color:var(--a3)}
 </style>
@@ -175,6 +227,7 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
       <button class="tab"    onclick="go('tasks',this)"><span class="dot"></span>Tareas</button>
     </div>
     <div class="tb-r">
+      <span class="live-dot">EN VIVO</span>
       <div class="av" id="uav">G</div>
       <span class="uname" id="unm">Usuario</span>
       <button class="obtn" onclick="doLogout()">Salir</button>
@@ -186,7 +239,7 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
     <!-- JUGADORES -->
     <div class="panel on" id="panel-users">
       <div class="ph">
-        <div><h2>Jugadores <b>/ Usuarios</b></h2><p>Gestiona los miembros registrados</p></div>
+        <div><h2>Jugadores <b>/ Usuarios</b></h2><p>Gestiona los miembros registrados · tiempo real</p></div>
         <button class="btn" onclick="openModal('users')">+ Agregar jugador</button>
       </div>
       <div class="stats">
@@ -198,10 +251,9 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
       <div class="tw">
         <div class="tt">
           <input class="sb" id="us" placeholder="🔍 Buscar jugador…" oninput="renderUsers()"/>
-          <div class="ta-row"><button class="btn-g sm" onclick="loadAll()">↻ Actualizar</button></div>
         </div>
         <div style="overflow-x:auto">
-          <table><thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th><th>Discord</th><th>Notas</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <table><thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th><th>Discord</th><th>Notas</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
           <tbody id="u-tb"></tbody></table>
         </div>
       </div>
@@ -210,7 +262,7 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
     <!-- WARNS -->
     <div class="panel" id="panel-warns">
       <div class="ph">
-        <div><h2>Warns <b>/ Sanciones</b></h2><p>Registro de advertencias y sanciones</p></div>
+        <div><h2>Warns <b>/ Sanciones</b></h2><p>Registro de advertencias y sanciones · tiempo real</p></div>
         <button class="btn coral" onclick="openModal('warns')">+ Nueva sanción</button>
       </div>
       <div class="stats">
@@ -222,7 +274,7 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
       <div class="tw">
         <div class="tt"><input class="sb" id="ws" placeholder="🔍 Buscar…" oninput="renderWarns()"/></div>
         <div style="overflow-x:auto">
-          <table><thead><tr><th>Jugador</th><th>Tipo</th><th>Motivo</th><th>Por</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <table><thead><tr><th>Jugador</th><th>Tipo</th><th>Motivo</th><th>Por</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
           <tbody id="w-tb"></tbody></table>
         </div>
       </div>
@@ -231,7 +283,7 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
     <!-- TICKETS -->
     <div class="panel" id="panel-tickets">
       <div class="ph">
-        <div><h2>Tickets <b>/ Soporte</b></h2><p>Gestión de solicitudes y reportes</p></div>
+        <div><h2>Tickets <b>/ Soporte</b></h2><p>Gestión de solicitudes y reportes · tiempo real</p></div>
         <button class="btn sky" onclick="openModal('tickets')">+ Nuevo ticket</button>
       </div>
       <div class="stats">
@@ -251,7 +303,7 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
           </div>
         </div>
         <div style="overflow-x:auto">
-          <table><thead><tr><th>Asunto</th><th>Jugador</th><th>Categoría</th><th>Estado</th><th>Asignado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <table><thead><tr><th>Asunto</th><th>Jugador</th><th>Categoría</th><th>Estado</th><th>Asignado</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr></thead>
           <tbody id="t-tb"></tbody></table>
         </div>
       </div>
@@ -260,7 +312,7 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
     <!-- TAREAS -->
     <div class="panel" id="panel-tasks">
       <div class="ph">
-        <div><h2>Tareas <b>internas</b></h2><p>Solo para el equipo · gian & greto</p></div>
+        <div><h2>Tareas <b>internas</b></h2><p>Solo para el equipo · gian & greto · tiempo real</p></div>
         <button class="btn" onclick="openModal('tasks')">+ Nueva tarea</button>
       </div>
       <div class="stats">
@@ -287,10 +339,37 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
     <button class="mc" onclick="closeModal()">×</button>
     <h3 id="m-ttl">Nuevo registro</h3>
     <div id="m-body"></div>
+    <!-- Image upload section (shown for all except users optionally) -->
+    <div id="m-img-section" style="margin-top:4px">
+      <div class="mf">
+        <label>🖼 Imágenes adjuntas <span style="font-size:9px;opacity:.6">(todos pueden verlas)</span></label>
+        <div class="img-upload-area" id="drop-zone">
+          <input type="file" id="img-input" accept="image/*" multiple onchange="handleImgSelect(event)"/>
+          <div class="up-icon">📎</div>
+          <p>Haz clic o arrastra imágenes aquí</p>
+          <div class="up-hint">PNG, JPG, GIF, WEBP · máx 5 MB por imagen</div>
+        </div>
+        <div id="img-uploading" class="img-uploading" style="display:none">
+          <div class="spinner"></div><span>Subiendo imágenes…</span>
+        </div>
+        <div class="img-preview-grid" id="img-preview"></div>
+      </div>
+    </div>
     <div class="mbtns">
       <button class="btn-g" onclick="closeModal()">Cancelar</button>
       <button class="btn sky" onclick="saveRec()">Guardar</button>
     </div>
+  </div>
+</div>
+
+<!-- IMAGE VIEWER -->
+<div class="img-viewer" id="img-viewer" onclick="closeViewer(event)">
+  <button class="img-viewer-close" onclick="closeViewer()">×</button>
+  <img id="viewer-img" src="" alt=""/>
+  <div class="img-viewer-nav">
+    <button onclick="viewerNav(-1)">← Ant</button>
+    <span id="viewer-counter">1 / 1</span>
+    <button onclick="viewerNav(1)">Sig →</button>
   </div>
 </div>
 
@@ -300,19 +379,23 @@ td{padding:11px 14px;vertical-align:middle;max-width:200px;overflow:hidden;text-
 import { initializeApp }   from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc,
          updateDoc, deleteDoc, doc, serverTimestamp,
-         query, orderBy } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+         query, orderBy, onSnapshot, arrayUnion, arrayRemove
+       } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject }
+         from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey:            "AIzaSyC4FVfOGBqoPy54CiloGHjL0ZoEN29_3Mo",
   authDomain:        "controleventify.firebaseapp.com",
   projectId:         "controleventify",
-  storageBucket:     "controleventify.firebasestorage.app",
+  storageBucket:     "controleventify.appspot.com",
   messagingSenderId: "675120152011",
   appId:             "1:675120152011:web:432f26240d88702e2a8a4e"
 };
 
-const fbApp = initializeApp(firebaseConfig);
-const db    = getFirestore(fbApp);
+const fbApp  = initializeApp(firebaseConfig);
+const db     = getFirestore(fbApp);
+const storage= getStorage(fbApp);
 
 /* ── AUTH ── */
 const CREDS = { gian:'123', greto:'123' };
@@ -336,33 +419,38 @@ document.addEventListener('keydown', e => {
 });
 window.doLogout = () => { sessionStorage.removeItem('cu'); location.reload(); };
 
+/* ── DB & REAL-TIME LISTENERS ── */
+const DB = { users:[], warns:[], tickets:[], tasks:[] };
+let TF = 'all';
+const unsubs = [];
+
 function initApp() {
   document.getElementById('app').classList.add('on');
   document.getElementById('unm').textContent = CU.charAt(0).toUpperCase() + CU.slice(1);
   document.getElementById('uav').textContent = CU.charAt(0).toUpperCase();
-  loadAll();
+  startListeners();
 }
 
-/* ── FIRESTORE ── */
-const DB = { users:[], warns:[], tickets:[], tasks:[] };
-let TF = 'all';
+function startListeners() {
+  // Unsubscribe old if any
+  unsubs.forEach(u => u());
+  unsubs.length = 0;
 
-window.loadAll = async () => {
-  try {
-    const [u,w,t,ta] = await Promise.all([
-      getCol('users'), getCol('warns'), getCol('tickets'), getCol('tasks')
-    ]);
-    DB.users=u; DB.warns=w; DB.tickets=t; DB.tasks=ta;
-    renderAll();
-  } catch(e) { showToast('Error al cargar: ' + e.message, true); }
-};
-
-async function getCol(name) {
-  const snap = await getDocs(query(collection(db, name), orderBy('createdAt','desc')));
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const cols = ['users','warns','tickets','tasks'];
+  cols.forEach(col => {
+    const q = query(collection(db, col), orderBy('createdAt','desc'));
+    const unsub = onSnapshot(q, snap => {
+      const prev = DB[col].map(x=>x.id);
+      DB[col] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      // Detect new docs to flash
+      const newIds = DB[col].map(x=>x.id).filter(id => !prev.includes(id));
+      renderAll(newIds, col);
+    }, err => {
+      showToast('Error tiempo real: ' + err.message, true);
+    });
+    unsubs.push(unsub);
+  });
 }
-
-function renderAll() { renderUsers(); renderWarns(); renderTickets(); renderTasks(); }
 
 /* ── NAV ── */
 window.go = (tab, btn) => {
@@ -372,8 +460,28 @@ window.go = (tab, btn) => {
   btn.classList.add('on');
 };
 
+/* ── RENDER ── */
+function renderAll(newIds=[], col='') {
+  renderUsers(col==='users'?newIds:[]);
+  renderWarns(col==='warns'?newIds:[]);
+  renderTickets(col==='tickets'?newIds:[]);
+  renderTasks();
+}
+
+/* ── IMAGE STACK HELPER ── */
+function imgStack(imgs, res, id) {
+  if (!imgs || !imgs.length) return '<span style="color:var(--mu);font-size:11px">—</span>';
+  const shown = imgs.slice(0,3);
+  const extra = imgs.length - shown.length;
+  const thumbs = shown.map((url,i) =>
+    `<img class="img-stack-th" src="${url}" onclick="openViewer(${JSON.stringify(imgs)},${i})" title="Ver imagen"/>`
+  ).join('');
+  const more = extra > 0 ? `<span class="img-count" onclick="openViewer(${JSON.stringify(imgs)},0)">+${extra}</span>` : '';
+  return `<div class="img-stack">${thumbs}${more}</div>`;
+}
+
 /* ── RENDER USERS ── */
-window.renderUsers = () => {
+window.renderUsers = (newIds=[]) => {
   const q = document.getElementById('us').value.toLowerCase();
   const rows = DB.users.filter(u => !q || u.nombre?.toLowerCase().includes(q) || u.discord?.toLowerCase().includes(q));
   document.getElementById('u-t').textContent = DB.users.length;
@@ -381,21 +489,23 @@ window.renderUsers = () => {
   document.getElementById('u-b').textContent = DB.users.filter(u=>u.estado==='baneado').length;
   document.getElementById('u-s').textContent = DB.users.filter(u=>u.rol==='admin'||u.rol==='mod').length;
   const tb = document.getElementById('u-tb');
-  if (!rows.length) { tb.innerHTML = eRow(7,'Sin jugadores registrados'); return; }
-  tb.innerHTML = rows.map(u=>`<tr>
+  if (!rows.length) { tb.innerHTML = eRow(8,'Sin jugadores registrados'); return; }
+  tb.innerHTML = rows.map(u=>`<tr class="${newIds.includes(u.id)?'rt-new':''}">
     <td><b>${esc(u.nombre||'—')}</b></td>
     <td>${rolB(u.rol)}</td><td>${estB(u.estado)}</td>
     <td class="cd">${esc(u.discord||'—')}</td>
-    <td>${esc(u.notas||'—')}</td>
+    <td style="max-width:160px">${esc(u.notas||'—')}</td>
+    <td>${imgStack(u.imagenes,'users',u.id)}</td>
     <td class="cd">${fd(u.createdAt)}</td>
     <td><div class="ra">
       <button class="ia" onclick="editRec('users','${u.id}')">✏</button>
+      <button class="ia img-btn" onclick="openImgUpload('users','${u.id}')">🖼</button>
       <button class="ia del" onclick="delRec('users','${u.id}')">✕</button>
     </div></td></tr>`).join('');
 };
 
 /* ── RENDER WARNS ── */
-window.renderWarns = () => {
+window.renderWarns = (newIds=[]) => {
   const q = document.getElementById('ws').value.toLowerCase();
   const rows = DB.warns.filter(w=>!q||w.jugador?.toLowerCase().includes(q)||w.motivo?.toLowerCase().includes(q));
   const now=new Date(),m=now.getMonth(),y=now.getFullYear();
@@ -407,19 +517,22 @@ window.renderWarns = () => {
     return d.getMonth()===m&&d.getFullYear()===y;
   }).length;
   const tb = document.getElementById('w-tb');
-  if (!rows.length) { tb.innerHTML = eRow(6,'Sin sanciones registradas'); return; }
-  tb.innerHTML = rows.map(w=>`<tr>
+  if (!rows.length) { tb.innerHTML = eRow(7,'Sin sanciones registradas'); return; }
+  tb.innerHTML = rows.map(w=>`<tr class="${newIds.includes(w.id)?'rt-new':''}">
     <td><b>${esc(w.jugador||'—')}</b></td>
     <td>${tipoB(w.tipo)}</td>
     <td style="max-width:200px">${esc(w.motivo||'—')}</td>
     <td>${esc(w.por||'—')}</td>
+    <td>${imgStack(w.imagenes,'warns',w.id)}</td>
     <td class="cd">${fd(w.createdAt)}</td>
-    <td><div class="ra"><button class="ia del" onclick="delRec('warns','${w.id}')">✕</button></div></td>
-  </tr>`).join('');
+    <td><div class="ra">
+      <button class="ia img-btn" onclick="openImgUpload('warns','${w.id}')">🖼</button>
+      <button class="ia del" onclick="delRec('warns','${w.id}')">✕</button>
+    </div></td></tr>`).join('');
 };
 
 /* ── RENDER TICKETS ── */
-window.renderTickets = () => {
+window.renderTickets = (newIds=[]) => {
   const q = document.getElementById('ts').value.toLowerCase();
   const f = document.getElementById('tfl').value;
   const rows = DB.tickets.filter(t=>(!f||t.estado===f)&&(!q||t.asunto?.toLowerCase().includes(q)||t.jugador?.toLowerCase().includes(q)));
@@ -428,16 +541,18 @@ window.renderTickets = () => {
   document.getElementById('t-p').textContent = DB.tickets.filter(t=>t.estado==='en proceso').length;
   document.getElementById('t-c').textContent = DB.tickets.filter(t=>t.estado==='cerrado').length;
   const tb = document.getElementById('t-tb');
-  if (!rows.length) { tb.innerHTML = eRow(7,'Sin tickets'); return; }
-  tb.innerHTML = rows.map(t=>`<tr>
+  if (!rows.length) { tb.innerHTML = eRow(8,'Sin tickets'); return; }
+  tb.innerHTML = rows.map(t=>`<tr class="${newIds.includes(t.id)?'rt-new':''}">
     <td><b>${esc(t.asunto||'—')}</b></td>
     <td>${esc(t.jugador||'—')}</td>
     <td>${catB(t.categoria)}</td>
     <td>${tkB(t.estado)}</td>
     <td>${esc(t.asignado||'—')}</td>
+    <td>${imgStack(t.imagenes,'tickets',t.id)}</td>
     <td class="cd">${fd(t.createdAt)}</td>
     <td><div class="ra">
       <button class="ia" onclick="editRec('tickets','${t.id}')">✏</button>
+      <button class="ia img-btn" onclick="openImgUpload('tickets','${t.id}')">🖼</button>
       <button class="ia del" onclick="delRec('tickets','${t.id}')">✕</button>
     </div></td></tr>`).join('');
 };
@@ -469,7 +584,9 @@ window.renderTasks = () => {
           ${t.nota?`<span class="tnote">${esc(t.nota)}</span>`:''}
           ${prioB(t.prioridad)}
           <span class="twho">→ ${esc(t.asignado||'—')}</span>
+          <button class="ia img-btn" style="padding:2px 8px;font-size:10px" onclick="openImgUpload('tasks','${t.id}')">🖼 Fotos</button>
         </div>
+        ${t.imagenes && t.imagenes.length ? `<div class="tc-imgs">${t.imagenes.map((url,i)=>`<img src="${url}" onclick="openViewer(${JSON.stringify(t.imagenes)},${i})" title="Ver imagen"/>`).join('')}</div>` : ''}
       </div>
       <button class="tdel" onclick="delRec('tasks','${t.id}')">✕</button>
     </div>`).join('');
@@ -478,13 +595,14 @@ window.renderTasks = () => {
 window.toggleTask = async (id, done) => {
   try {
     await updateDoc(doc(db,'tasks',id),{done:!done});
-    DB.tasks=DB.tasks.map(t=>t.id===id?{...t,done:!done}:t);
-    renderTasks();
   } catch(e){showToast(e.message,true);}
 };
 
-/* ── MODAL ── */
+/* ── MODAL FORMS ── */
 let _res=null,_id=null;
+let _pendingImgs = []; // {dataUrl, file} — waiting to upload on save
+let _existingImgs = []; // already-uploaded URLs
+
 const FORMS={
   users:`<div class="mr">
     <div class="mf"><label>Nombre *</label><input id="f-nombre" placeholder="NombreJugador"/></div>
@@ -509,7 +627,7 @@ const FORMS={
       <option value="kick">Kick</option><option value="ban">Ban</option>
     </select></div>
   </div>
-  <div class="mf"><label>Motivo *</label><textarea id="f-motivo" placeholder="Motivo de la sanción..."></textarea></div>
+  <div class="mf"><label>Motivo *</label><textarea id="f-motivo" placeholder="Motivo de la sanción…"></textarea></div>
   <div class="mf"><label>Sancionado por</label><input id="f-por"/></div>`,
 
   tickets:`<div class="mf"><label>Asunto *</label><input id="f-asunto" placeholder="Título del ticket"/></div>
@@ -532,7 +650,7 @@ const FORMS={
   </div>
   <div class="mf"><label>Descripción</label><textarea id="f-descripcion"></textarea></div>`,
 
-  tasks:`<div class="mf"><label>Título *</label><input id="f-titulo" placeholder="Qué hay que hacer..."/></div>
+  tasks:`<div class="mf"><label>Título *</label><input id="f-titulo" placeholder="Qué hay que hacer…"/></div>
   <div class="mr">
     <div class="mf"><label>Prioridad</label><select id="f-prioridad">
       <option value="baja">Baja</option><option value="media" selected>Media</option><option value="alta">Alta</option>
@@ -546,43 +664,148 @@ const FORMS={
 const TITLES={users:'Jugador',warns:'Sanción',tickets:'Ticket',tasks:'Tarea'};
 const REQ={users:'nombre',warns:'jugador',tickets:'asunto',tasks:'titulo'};
 
-window.openModal = (res,id=null) => {
+window.openModal = (res, id=null) => {
   _res=res; _id=id;
+  _pendingImgs=[];
+  _existingImgs=[];
   document.getElementById('m-ttl').textContent=(id?'Editar ':'Nuevo/a ')+TITLES[res];
   document.getElementById('m-body').innerHTML=FORMS[res];
-  // pre-fill "por" for warns
   const por=document.getElementById('f-por');
   if(por&&!id) por.value=CU?CU.charAt(0).toUpperCase()+CU.slice(1):'';
   if(id){
     const item=DB[res].find(x=>x.id===id);
-    if(item) Object.keys(item).forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=item[k]??'';});
+    if(item){
+      Object.keys(item).forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=item[k]??'';});
+      _existingImgs = item.imagenes ? [...item.imagenes] : [];
+    }
   }
+  refreshImgPreview();
   document.getElementById('ov').classList.add('on');
   setTimeout(()=>document.querySelector('#m-body input,#m-body textarea')?.focus(),100);
 };
-window.editRec=(res,id)=>openModal(res,id);
-window.closeModal=()=>{document.getElementById('ov').classList.remove('on');_res=_id=null;};
-window.bgClose=(e)=>{if(e.target===document.getElementById('ov'))closeModal();};
 
+window.editRec = (res,id) => openModal(res,id);
+window.closeModal = () => {
+  document.getElementById('ov').classList.remove('on');
+  _res=_id=null; _pendingImgs=[]; _existingImgs=[];
+  refreshImgPreview();
+};
+window.bgClose = (e) => { if(e.target===document.getElementById('ov')) closeModal(); };
+
+/* ── IMAGE HANDLING IN MODAL ── */
+function refreshImgPreview() {
+  const grid = document.getElementById('img-preview');
+  grid.innerHTML = '';
+  // Existing uploaded
+  _existingImgs.forEach((url, i) => {
+    const div = document.createElement('div');
+    div.className = 'img-thumb';
+    div.innerHTML = `<img src="${url}" onclick="openViewer(${JSON.stringify(_existingImgs)},${i})"/>
+      <button class="rm" onclick="removeExistingImg(${i})">✕</button>`;
+    grid.appendChild(div);
+  });
+  // Pending (local preview)
+  _pendingImgs.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'img-thumb';
+    div.style.border = '1px dashed var(--a2)';
+    div.innerHTML = `<img src="${item.dataUrl}"/>
+      <button class="rm" onclick="removePendingImg(${i})">✕</button>`;
+    grid.appendChild(div);
+  });
+}
+
+window.removeExistingImg = (i) => {
+  _existingImgs.splice(i, 1);
+  refreshImgPreview();
+};
+window.removePendingImg = (i) => {
+  _pendingImgs.splice(i, 1);
+  refreshImgPreview();
+};
+
+window.handleImgSelect = async (e) => {
+  const files = Array.from(e.target.files);
+  for(const f of files){
+    if(f.size > 5*1024*1024){ showToast('Imagen demasiado grande (máx 5 MB)',true); continue; }
+    const dataUrl = await fileToDataUrl(f);
+    _pendingImgs.push({ dataUrl, file: f });
+  }
+  refreshImgPreview();
+  e.target.value = '';
+};
+
+function fileToDataUrl(file) {
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function uploadPendingImgs(docId) {
+  if (!_pendingImgs.length) return [];
+  const uiEl = document.getElementById('img-uploading');
+  uiEl.style.display='flex';
+  const urls = [];
+  for(const {file} of _pendingImgs){
+    const path = `images/${_res}/${docId}/${Date.now()}_${file.name}`;
+    const storageRef = sRef(storage, path);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    urls.push(url);
+  }
+  uiEl.style.display='none';
+  return urls;
+}
+
+/* ── QUICK IMAGE UPLOAD (from table button) ── */
+let _quickRes=null, _quickId=null;
+
+window.openImgUpload = (res, id) => {
+  // Reuse modal just for images
+  _quickRes=res; _quickId=id;
+  const item = DB[res].find(x=>x.id===id);
+  _res=res; _id=id;
+  _pendingImgs=[];
+  _existingImgs = item?.imagenes ? [...item.imagenes] : [];
+  document.getElementById('m-ttl').textContent = '🖼 Imágenes · ' + (item?.nombre||item?.jugador||item?.asunto||item?.titulo||'—');
+  document.getElementById('m-body').innerHTML = '';
+  refreshImgPreview();
+  document.getElementById('ov').classList.add('on');
+};
+
+/* ── SAVE ── */
 window.saveRec = async () => {
   const body={};
   document.querySelectorAll('#m-body [id^="f-"]').forEach(el=>{body[el.id.replace('f-','')]=el.value.trim();});
+  if(_id && !document.querySelector('#m-body input')) {
+    // Quick image-only save
+    const newUrls = await uploadPendingImgs(_id);
+    const allUrls = [..._existingImgs, ...newUrls];
+    await updateDoc(doc(db,_res,_id),{imagenes: allUrls, updatedAt:serverTimestamp()});
+    showToast('Imágenes guardadas ✓');
+    closeModal(); return;
+  }
   if(!body[REQ[_res]]){showToast('El campo requerido está vacío',true);return;}
   try{
     if(_id){
-      await updateDoc(doc(db,_res,_id),{...body,updatedAt:serverTimestamp()});
-      DB[_res]=DB[_res].map(x=>x.id===_id?{...x,...body}:x);
+      const newUrls = await uploadPendingImgs(_id);
+      const allUrls = [..._existingImgs, ...newUrls];
+      await updateDoc(doc(db,_res,_id),{...body, imagenes:allUrls, updatedAt:serverTimestamp()});
       showToast('Actualizado correctamente ✓');
     } else {
       const saveBody={...body, createdAt:serverTimestamp()};
       if(_res==='tasks') saveBody.done=false;
-      const ref=await addDoc(collection(db,_res),saveBody);
-      // Cache local con Date() normal (serverTimestamp es undefined localmente)
-      if(!Array.isArray(DB[_res])) DB[_res]=[];
-      DB[_res].unshift({id:ref.id, ...body, createdAt:new Date(), done:(_res==='tasks'?false:undefined)});
+      const ref = await addDoc(collection(db,_res),saveBody);
+      const newUrls = await uploadPendingImgs(ref.id);
+      if(newUrls.length){
+        await updateDoc(doc(db,_res,ref.id),{imagenes: newUrls});
+      }
       showToast('Creado correctamente ✓');
     }
-    closeModal(); renderAll();
+    closeModal();
   }catch(e){showToast('Error: '+e.message,true);}
 };
 
@@ -590,10 +813,37 @@ window.delRec = async (res,id) => {
   if(!confirm('¿Eliminar este registro?'))return;
   try{
     await deleteDoc(doc(db,res,id));
-    DB[res]=DB[res].filter(x=>x.id!==id);
-    renderAll(); showToast('Eliminado correctamente');
+    showToast('Eliminado correctamente');
   }catch(e){showToast(e.message,true);}
 };
+
+/* ── IMAGE VIEWER ── */
+let _viewerImgs=[], _viewerIdx=0;
+
+window.openViewer = (imgs, idx) => {
+  _viewerImgs = imgs;
+  _viewerIdx = idx;
+  updateViewer();
+  document.getElementById('img-viewer').classList.add('on');
+};
+window.closeViewer = (e) => {
+  if(!e || e.target===document.getElementById('img-viewer') || e.target.classList.contains('img-viewer-close'))
+    document.getElementById('img-viewer').classList.remove('on');
+};
+window.viewerNav = (dir) => {
+  _viewerIdx = (_viewerIdx + dir + _viewerImgs.length) % _viewerImgs.length;
+  updateViewer();
+};
+function updateViewer(){
+  document.getElementById('viewer-img').src = _viewerImgs[_viewerIdx];
+  document.getElementById('viewer-counter').textContent = `${_viewerIdx+1} / ${_viewerImgs.length}`;
+}
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('img-viewer').classList.contains('on')) return;
+  if(e.key==='ArrowLeft') viewerNav(-1);
+  if(e.key==='ArrowRight') viewerNav(1);
+  if(e.key==='Escape') closeViewer({target:document.getElementById('img-viewer')});
+});
 
 /* ── HELPERS ── */
 const rolB  = r=>{const m={admin:'bg4',mod:'bg3',vip:'bg2',jugador:'bg0'};return`<span class="bg ${m[r]||'bg0'}">${r||'—'}</span>`;};
